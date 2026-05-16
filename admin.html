@@ -41,7 +41,7 @@
     }
 
     .brand { display: flex; align-items: center; gap: 12px; font-weight: 850; text-decoration: none; }
-    .mark { width: 40px; height: 40px; border-radius: var(--radius); display: grid; place-items: center; background: linear-gradient(135deg, var(--brand), var(--green)); color: #fff; }
+    .mark { width: 54px; height: 40px; border-radius: var(--radius); display: block; object-fit: contain; padding: 4px; background: #fff; box-shadow: 0 12px 26px rgba(9, 105, 218, .18); }
     .brand small { display: block; color: var(--muted); font-size: 12px; }
 
     main { width: min(1180px, 100%); margin: 0 auto; padding: 26px clamp(14px, 4vw, 42px) 48px; }
@@ -121,7 +121,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="index.html">
-      <span class="mark">IDS</span>
+      <img class="mark" src="assets/ids-logo.png" alt="IDS">
       <span>IDS Hub Admin<small>Tools and users</small></span>
     </a>
     <div class="actions">

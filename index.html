@@ -60,15 +60,14 @@
     }
 
     .brand-mark {
-      width: 40px;
+      width: 54px;
       height: 40px;
       border-radius: var(--radius);
-      display: grid;
-      place-items: center;
+      display: block;
       flex: 0 0 auto;
-      background: linear-gradient(135deg, var(--brand), var(--green));
-      color: #fff;
-      letter-spacing: 0;
+      object-fit: contain;
+      background: #fff;
+      padding: 4px;
       box-shadow: 0 12px 26px rgba(9, 105, 218, .22);
     }
 
@@ -620,7 +619,7 @@
 <body>
   <header class="topbar">
     <a class="brand" href="#">
-      <span class="brand-mark">IDS</span>
+      <img class="brand-mark" src="assets/ids-logo.png" alt="IDS">
       <span>IDS Hub<br>Tools and Games</span>
     </a>
     <nav class="nav" aria-label="メインメニュー">
