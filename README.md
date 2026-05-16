@@ -1,26 +1,33 @@
 # IDM Hub
 
-便利ツールやミニゲームをまとめる一般公開向けHubサイトのプロトタイプです。
+便利ツールやミニゲームをまとめる一般公開向けHubサイトです。
 
 ## Files
 
-- `index.html`: Firebase未接続の静的プロトタイプ
-- `FIREBASE_SETUP.md`: Firestore連携、GitHub Pages、Firebase Hostingの設定手順
+- `index.html`: Firebase HostingとFirestoreに接続済みの公開ページ
+- `firestore.rules`: Firestoreのセキュリティルール
+- `FIREBASE_SETUP.md`: Firestore連携、GitHub Pages、Firebase Hostingの設定メモ
 
-## Current Prototype
+## Current State
 
 - 一般公開サービス向けのトップページ
-- アカウント登録・ログイン導線
-- 未ログイン時のコンテンツロック表示
+- Firestoreを使ったアカウント登録・ログイン
+- 未ログイン時のコンテンツロック
 - ツール、ゲームの検索とカテゴリフィルター
-- Firebase接続前の仮ログイン処理
+- ログイン後の外部ツールリンク遷移
 
 ## Deploy
 
-GitHub PagesまたはFirebase Hostingで公開できます。詳しい手順は `FIREBASE_SETUP.md` を参照してください。
+Firebase Hostingで公開済みです。詳しい設定は `FIREBASE_SETUP.md` を参照してください。
 
 Firebase Hosting project:
 
 ```text
 idm-hub-20260516
+```
+
+URL:
+
+```text
+https://idm-hub-20260516.web.app
 ```

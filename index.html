@@ -827,7 +827,28 @@
 
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
-  <script>
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-app.js";
+    import {
+      getFirestore,
+      doc,
+      getDoc,
+      setDoc,
+      updateDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
+
+    const firebaseConfig = {
+      projectId: "idm-hub-20260516",
+      appId: "1:315082566768:web:03c7c4b57f75ef9a01d8b5",
+      storageBucket: "idm-hub-20260516.firebasestorage.app",
+      apiKey: "AIzaSyC_nT_seXtKnZWff-76jvJT0EZfkL21TxE",
+      authDomain: "idm-hub-20260516.firebaseapp.com",
+      messagingSenderId: "315082566768"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     const cards = [...document.querySelectorAll(".card")];
     const filterButtons = [...document.querySelectorAll("[data-filter]")];
     const searchInput = document.querySelector("#searchInput");
@@ -842,6 +863,16 @@
     const toast = document.querySelector("#toast");
     let currentFilter = "all";
     let authMode = "login";
+    let currentUser = null;
+
+    const toolUrls = {
+      "JSON Formatter": "https://jsonformatter.org/",
+      "QR Code Maker": "https://www.qr-code-generator.com/",
+      "Base64 Converter": "https://www.base64decode.org/",
+      "Typing Sprint": "https://monkeytype.com/",
+      "Logic Blocks": "https://www.puzzle-nurikabe.com/",
+      "Quick Memo": "https://keep.google.com/"
+    };
 
     function showToast(message) {
       toast.textContent = message;
@@ -891,6 +922,83 @@
       emptyState.classList.toggle("visible", visible === 0);
     }
 
+    function normalizeEmail(email) {
+      return String(email).trim().toLowerCase();
+    }
+
+    function toBase64(value) {
+      return btoa(unescape(encodeURIComponent(value)));
+    }
+
+    function setLoading(isLoading) {
+      authSubmit.disabled = isLoading;
+      authSubmit.textContent = isLoading ? "処理中..." : authMode === "signup" ? "登録する" : "ログイン";
+    }
+
+    function setLoggedIn(user) {
+      currentUser = user;
+      sessionStorage.setItem("idmHubUser", JSON.stringify(user));
+      document.body.classList.add("is-logged-in");
+      document.querySelectorAll(".card.locked").forEach((card) => card.classList.remove("locked"));
+      document.querySelector(".locked-banner span").textContent = `${user.name || user.email} としてログイン中です。コンテンツを利用できます。`;
+      document.querySelector(".locked-banner button").textContent = "ログイン済み";
+      document.querySelectorAll("[data-auth-open='login']").forEach((button) => {
+        button.textContent = "ログイン中";
+        button.disabled = true;
+      });
+      closeModal();
+    }
+
+    async function signupUser(formData) {
+      const name = String(formData.get("name") || "").trim();
+      const email = normalizeEmail(formData.get("email"));
+      const password = String(formData.get("password") || "");
+
+      if (password.length < 8) {
+        throw new Error("パスワードは8文字以上で入力してください。");
+      }
+
+      const userRef = doc(db, "users", email);
+      const existing = await getDoc(userRef);
+      if (existing.exists()) {
+        throw new Error("このメールアドレスは登録済みです。ログインしてください。");
+      }
+
+      await setDoc(userRef, {
+        name,
+        email,
+        passwordBase64: toBase64(password),
+        enabled: true,
+        createdAt: serverTimestamp(),
+        updatedAt: serverTimestamp(),
+        lastLoginAt: serverTimestamp()
+      });
+
+      return { name, email };
+    }
+
+    async function loginUser(formData) {
+      const email = normalizeEmail(formData.get("email"));
+      const password = String(formData.get("password") || "");
+      const userRef = doc(db, "users", email);
+      const snapshot = await getDoc(userRef);
+
+      if (!snapshot.exists()) {
+        throw new Error("メールアドレスまたはパスワードが違います。");
+      }
+
+      const user = snapshot.data();
+      if (!user.enabled || user.passwordBase64 !== toBase64(password)) {
+        throw new Error("メールアドレスまたはパスワードが違います。");
+      }
+
+      await updateDoc(userRef, {
+        lastLoginAt: serverTimestamp()
+      });
+
+      return { name: user.name || "", email: user.email };
+    }
+
     filterButtons.forEach((button) => {
       button.addEventListener("click", () => {
         currentFilter = button.dataset.filter;
@@ -907,8 +1015,14 @@
 
     document.querySelectorAll("[data-requires-login]").forEach((button) => {
       button.addEventListener("click", () => {
-        showToast("このコンテンツを使うにはログインが必要です。");
-        openModal("login");
+        if (!currentUser) {
+          showToast("このコンテンツを使うにはログインが必要です。");
+          openModal("login");
+          return;
+        }
+
+        const title = button.closest(".card").querySelector("h3").textContent.trim();
+        window.open(toolUrls[title] || "#", "_blank", "noopener,noreferrer");
       });
     });
 
@@ -921,17 +1035,31 @@
       setAuthMode(authMode === "signup" ? "login" : "signup");
     });
 
-    document.querySelector("#authForm").addEventListener("submit", (event) => {
+    document.querySelector("#authForm").addEventListener("submit", async (event) => {
       event.preventDefault();
-      const password = new FormData(event.currentTarget).get("password");
-      const base64Password = btoa(unescape(encodeURIComponent(password)));
-      console.info("Firestore integration placeholder:", { authMode, passwordBase64: base64Password });
-      showToast("現在はFirebase未接続のため、認証処理は仮表示です。");
+      setLoading(true);
+
+      try {
+        const formData = new FormData(event.currentTarget);
+        const user = authMode === "signup" ? await signupUser(formData) : await loginUser(formData);
+        setLoggedIn(user);
+        showToast(authMode === "signup" ? "登録が完了しました。" : "ログインしました。");
+      } catch (error) {
+        showToast(error.message || "認証に失敗しました。");
+      } finally {
+        setLoading(false);
+      }
     });
 
-    document.querySelector("#heroLoginForm").addEventListener("submit", (event) => {
+    document.querySelector("#heroLoginForm").addEventListener("submit", async (event) => {
       event.preventDefault();
-      showToast("現在はFirebase未接続のため、ログイン画面のデモのみ動作します。");
+      try {
+        const user = await loginUser(new FormData(event.currentTarget));
+        setLoggedIn(user);
+        showToast("ログインしました。");
+      } catch (error) {
+        showToast(error.message || "ログインに失敗しました。");
+      }
     });
 
     document.addEventListener("keydown", (event) => {
@@ -939,6 +1067,10 @@
     });
 
     setAuthMode("login");
+    const savedUser = sessionStorage.getItem("idmHubUser");
+    if (savedUser) {
+      setLoggedIn(JSON.parse(savedUser));
+    }
   </script>
 </body>
 </html>

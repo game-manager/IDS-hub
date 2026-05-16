@@ -1,6 +1,6 @@
 # IDM Hub Firebase Setup
 
-このプロジェクトの `index.html` は、Firebaseをまだ読み込まない静的プロトタイプです。ここでは、あとからFirestoreベースの登録・ログインに差し替えるための手順をまとめます。
+このプロジェクトの `index.html` は、Firebase HostingとFirestoreに接続済みです。登録時にFirestoreへユーザーを作成し、ログイン時に `passwordBase64` を照合します。
 
 ## 作成済みFirebaseプロジェクト
 
@@ -12,11 +12,18 @@ Project Name: IDM Hub
 Console: https://console.firebase.google.com/project/idm-hub-20260516/overview
 ```
 
-このリポジトリには、Firebase Hosting用に以下のファイルを追加しています。
+このリポジトリには、Firebase HostingとFirestore Rules用に以下のファイルを追加しています。
 
 ```text
 .firebaserc
 firebase.json
+firestore.rules
+```
+
+公開URL:
+
+```text
+https://idm-hub-20260516.web.app
 ```
 
 ## 前提
@@ -36,10 +43,10 @@ firebase.json
 users
 ```
 
-ドキュメントIDの例:
+ドキュメントID:
 
 ```text
-メールアドレスを正規化した文字列、または自動ID
+小文字化したメールアドレス
 ```
 
 フィールド例:
@@ -49,9 +56,10 @@ users
   name: "IDMユーザー",
   email: "user@example.com",
   passwordBase64: "cGFzc3dvcmQxMjM=",
+  enabled: true,
   createdAt: serverTimestamp(),
   updatedAt: serverTimestamp(),
-  enabled: true
+  lastLoginAt: serverTimestamp()
 }
 ```
 
@@ -73,9 +81,9 @@ function fromBase64(value) {
 }
 ```
 
-## Firebase SDK追加の流れ
+## Firebase SDK設定
 
-`index.html` の末尾付近、現在の `<script>` をFirebase連携版に変更します。
+`index.html` には次のFirebase Webアプリ設定を組み込み済みです。
 
 ```html
 <script type="module">
@@ -89,12 +97,12 @@ function fromBase64(value) {
   } from "https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore.js";
 
   const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "YOUR_PROJECT.firebaseapp.com",
-    projectId: "YOUR_PROJECT_ID",
-    storageBucket: "YOUR_PROJECT.appspot.com",
-    messagingSenderId: "YOUR_SENDER_ID",
-    appId: "YOUR_APP_ID"
+    projectId: "idm-hub-20260516",
+    appId: "1:315082566768:web:03c7c4b57f75ef9a01d8b5",
+    storageBucket: "idm-hub-20260516.firebasestorage.app",
+    apiKey: "AIzaSyC_nT_seXtKnZWff-76jvJT0EZfkL21TxE",
+    authDomain: "idm-hub-20260516.firebaseapp.com",
+    messagingSenderId: "315082566768"
   };
 
   const app = initializeApp(firebaseConfig);
@@ -102,7 +110,7 @@ function fromBase64(value) {
 </script>
 ```
 
-## 登録処理の考え方
+## 登録処理
 
 ```js
 async function signup({ name, email, password }) {
@@ -125,7 +133,7 @@ async function signup({ name, email, password }) {
 }
 ```
 
-## ログイン処理の考え方
+## ログイン処理
 
 ```js
 async function login({ email, password }) {
@@ -151,24 +159,15 @@ async function login({ email, password }) {
 
 ログイン後は、カードの `locked` クラスを外し、実際のリンクを有効化する処理を追加します。
 
-## Firestore Security Rules例
+## Firestore Security Rules
 
-Firebase Authenticationを使わない場合、クライアントからFirestoreへ直接安全に書き込ませるルール設計が難しくなります。最低限の例としては、開発中だけ書き込みを許可し、本番ではCloud Functionsや別サーバー経由に寄せることを推奨します。
+`firestore.rules` をデプロイ済みです。
 
-開発用の一時ルール例:
-
-```txt
-rules_version = '2';
-service cloud.firestore {
-  match /databases/{database}/documents {
-    match /users/{email} {
-      allow read, write: if false;
-    }
-  }
-}
+```bash
+firebase deploy --only firestore:rules --project idm-hub-20260516
 ```
 
-本番でブラウザから直接登録・ログインする場合は、Firebase Authenticationなしでは本人判定ができないため、公開クライアントから全ユーザー情報を読めるようなルールにしないでください。
+現在のルールでは、ユーザー一覧取得は拒否し、メールアドレスを指定した単体取得と登録に必要な作成だけを許可しています。ただしFirebase Authenticationなしでは完全な本人判定はできないため、将来的にはCloud Functionsや独自API経由に寄せることを推奨します。
 
 ## Firebase Hosting
 
@@ -177,14 +176,6 @@ Firebase CLIをインストールします。
 ```bash
 npm install -g firebase-tools
 firebase login
-```
-
-設定例:
-
-```text
-public directory: .
-single-page app: No
-automatic builds/deploys with GitHub: 任意
 ```
 
 公開:
