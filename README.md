@@ -4,10 +4,10 @@
 
 ## Files
 
-- `index.html`: Firebase HostingとFirestoreに接続済みの公開ページ
+- `index.html`: GitHub Pagesで公開するトップページ
 - `admin.html`: ユーザーとツールを管理する画面
 - `firestore.rules`: Firestoreのセキュリティルール
-- `FIREBASE_SETUP.md`: Firestore連携、GitHub Pages、Firebase Hostingの設定メモ
+- `FIREBASE_SETUP.md`: Firestore連携とGitHub Pagesの設定メモ
 
 ## Current State
 
@@ -20,24 +20,24 @@
 
 ## Deploy
 
-Firebase Hostingで公開済みです。詳しい設定は `FIREBASE_SETUP.md` を参照してください。
+GitHub Pagesで公開済みです。FirebaseはFirestoreだけを使っています。
 
-Firebase Hosting project:
-
-```text
-idm-hub-20260516
-```
-
-Note: FirebaseのプロジェクトIDと公開URLは作成済み識別子のため `idm-hub-20260516` のままです。サービス表示名は `IDS Hub` に修正済みです。
-
-URL:
+GitHub Pages:
 
 ```text
-https://idm-hub-20260516.web.app
+https://kali-n-coder.github.io/IDS-hub/
 ```
 
 Admin:
 
 ```text
-https://idm-hub-20260516.web.app/admin
+https://kali-n-coder.github.io/IDS-hub/admin.html
 ```
+
+Firebase project:
+
+```text
+idm-hub-20260516
+```
+
+Firebase Hostingは停止済みです。

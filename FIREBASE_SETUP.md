@@ -1,6 +1,6 @@
 # IDS Hub Firebase Setup
 
-このプロジェクトの `index.html` は、Firebase HostingとFirestoreに接続済みです。登録時にFirestoreへユーザーを作成し、ログイン時に `passwordBase64` を照合します。
+このプロジェクトの `index.html` は、GitHub Pagesで公開し、Firebase Firestoreに接続しています。登録時にFirestoreへユーザーを作成し、ログイン時に `passwordBase64` を照合します。
 
 ## 作成済みFirebaseプロジェクト
 
@@ -12,9 +12,9 @@ Project Name: IDS Hub
 Console: https://console.firebase.google.com/project/idm-hub-20260516/overview
 ```
 
-Note: `Project ID` とHosting URLは作成済み識別子のため `idm-hub-20260516` のままです。Firebase Console上の表示名とWeb App表示名は `IDS Hub` に修正済みです。
+Note: `Project ID` は作成済み識別子のため `idm-hub-20260516` のままです。Firebase Console上の表示名とWeb App表示名は `IDS Hub` に修正済みです。
 
-このリポジトリには、Firebase HostingとFirestore Rules用に以下のファイルを追加しています。
+このリポジトリには、Firestore Rules用に以下のファイルを追加しています。
 
 ```text
 .firebaserc
@@ -25,21 +25,23 @@ firestore.rules
 公開URL:
 
 ```text
-https://idm-hub-20260516.web.app
+https://kali-n-coder.github.io/IDS-hub/
 ```
 
 管理画面:
 
 ```text
-https://idm-hub-20260516.web.app/admin
+https://kali-n-coder.github.io/IDS-hub/admin.html
 ```
+
+Firebase Hostingは停止済みです。再度使う必要が出た場合だけ `firebase deploy --only hosting` を実行してください。
 
 ## 前提
 
 - Firebase Authenticationは使わない
 - ユーザー情報はFirestoreに保存する
 - パスワードはBase64文字列として保存する
-- GitHub PagesまたはFirebase Hostingで一般公開する
+- GitHub Pagesで一般公開する
 
 重要: Base64は暗号化ではなく、誰でも復元できるエンコードです。ほかのシステム都合で避けられない場合でも、Firestore Security Rules、HTTPS、アクセス制御、ログ出力抑制を必ず設定してください。
 
@@ -192,21 +194,6 @@ firebase deploy --only firestore:rules --project idm-hub-20260516
 ```
 
 管理画面追加に伴い、現在のルールではブラウザから `users` と `tools` の管理操作ができるようにしています。Firebase AuthenticationなしではFirestore Rulesだけで管理者本人を安全に判定できないため、この構成はプロトタイプ用途です。本番運用前に、管理操作はCloud Functionsなどサーバー側に移してください。
-
-## Firebase Hosting
-
-Firebase CLIをインストールします。
-
-```bash
-npm install -g firebase-tools
-firebase login
-```
-
-公開:
-
-```bash
-firebase deploy --only hosting --project idm-hub-20260516
-```
 
 ## GitHub Pages
 
