@@ -1,0 +1,944 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDM Hub</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #f4f7fb;
+      --ink: #132033;
+      --muted: #66758a;
+      --panel: #fff;
+      --line: #dce4ee;
+      --brand: #0969da;
+      --brand-dark: #044da4;
+      --green: #00876f;
+      --yellow: #d98900;
+      --red: #d64562;
+      --dark: #172232;
+      --shadow: 0 20px 55px rgba(24, 39, 58, .14);
+      --radius: 8px;
+      font-family: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 14px clamp(16px, 4vw, 42px);
+      border-bottom: 1px solid rgba(220, 228, 238, .9);
+      background: rgba(244, 247, 251, .88);
+      backdrop-filter: blur(14px);
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      min-width: 0;
+      text-decoration: none;
+      font-weight: 800;
+    }
+
+    .brand-mark {
+      width: 40px;
+      height: 40px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: linear-gradient(135deg, var(--brand), var(--green));
+      color: #fff;
+      letter-spacing: 0;
+      box-shadow: 0 12px 26px rgba(9, 105, 218, .22);
+    }
+
+    .brand span {
+      display: block;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .nav a,
+    .ghost-button,
+    .primary-button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border-radius: var(--radius);
+      font-weight: 800;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .nav a {
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .ghost-button {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+    }
+
+    .primary-button {
+      border: 0;
+      background: var(--brand);
+      color: #fff;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    main {
+      width: min(1180px, 100%);
+      margin: 0 auto;
+      padding: 28px clamp(14px, 4vw, 42px) 48px;
+    }
+
+    .hero {
+      min-height: 430px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.04fr) minmax(320px, .96fr);
+      overflow: hidden;
+      border-radius: var(--radius);
+      background: var(--dark);
+      box-shadow: var(--shadow);
+    }
+
+    .hero-copy {
+      padding: clamp(30px, 5vw, 56px);
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 22px;
+    }
+
+    .eyebrow {
+      margin: 0;
+      color: #89e3d3;
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 0;
+      max-width: 720px;
+      font-size: clamp(38px, 5vw, 64px);
+      line-height: 1.04;
+      letter-spacing: 0;
+    }
+
+    .hero-copy p:not(.eyebrow) {
+      margin: 0;
+      max-width: 640px;
+      color: #d7e2ef;
+      font-size: 16px;
+      line-height: 1.85;
+    }
+
+    .hero-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .hero .ghost-button {
+      border-color: rgba(255,255,255,.26);
+      background: rgba(255,255,255,.08);
+      color: #fff;
+    }
+
+    .hero-visual {
+      position: relative;
+      min-height: 430px;
+      background:
+        linear-gradient(135deg, rgba(23,34,50,.05), rgba(23,34,50,.78)),
+        url("https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1300&q=80") center/cover;
+    }
+
+    .login-panel {
+      position: absolute;
+      right: 24px;
+      bottom: 24px;
+      width: min(360px, calc(100% - 48px));
+      padding: 18px;
+      border: 1px solid rgba(255,255,255,.22);
+      border-radius: var(--radius);
+      background: rgba(10, 18, 28, .76);
+      color: #fff;
+      backdrop-filter: blur(14px);
+    }
+
+    .login-panel h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .field {
+      display: grid;
+      gap: 7px;
+      margin-top: 12px;
+    }
+
+    .field label {
+      color: #c8d7e8;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .field input {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 12px;
+      border: 1px solid rgba(255,255,255,.24);
+      border-radius: var(--radius);
+      outline: 0;
+      background: rgba(255,255,255,.1);
+      color: #fff;
+    }
+
+    .field input::placeholder { color: rgba(255,255,255,.58); }
+
+    .login-panel .primary-button {
+      width: 100%;
+      justify-content: center;
+      margin-top: 14px;
+      background: #fff;
+      color: #123a5f;
+    }
+
+    .login-note {
+      margin: 12px 0 0;
+      color: #b8c9db;
+      font-size: 12px;
+      line-height: 1.65;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 16px;
+      margin-bottom: 14px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      font-size: 23px;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.7;
+    }
+
+    .search-wrap {
+      position: relative;
+      width: min(360px, 100%);
+    }
+
+    .search-wrap svg {
+      position: absolute;
+      left: 13px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #77879a;
+    }
+
+    .search-wrap input {
+      width: 100%;
+      min-height: 42px;
+      padding: 0 12px 0 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      outline: 0;
+      background: var(--panel);
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .chip {
+      min-height: 34px;
+      padding: 0 13px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--muted);
+      font-weight: 800;
+    }
+
+    .chip.active {
+      border-color: var(--brand);
+      background: rgba(9,105,218,.1);
+      color: var(--brand-dark);
+    }
+
+    .locked-banner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 14px;
+      padding: 13px 14px;
+      border: 1px solid #f0d18a;
+      border-radius: var(--radius);
+      background: #fff8e7;
+      color: #644500;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .card {
+      min-height: 200px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 8px 22px rgba(24, 39, 58, .06);
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 16px 34px rgba(24, 39, 58, .11);
+    }
+
+    .card-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+    }
+
+    .tool-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      color: #fff;
+      background: var(--brand);
+    }
+
+    .tool-icon.green { background: var(--green); }
+    .tool-icon.yellow { background: var(--yellow); }
+    .tool-icon.red { background: var(--red); }
+    .tool-icon.dark { background: #27384f; }
+
+    .badge {
+      height: 26px;
+      padding: 0 9px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      background: #eef3f8;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 18px;
+    }
+
+    .card p {
+      margin: 0;
+      flex: 1;
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.7;
+    }
+
+    .card .primary-button,
+    .card .ghost-button {
+      justify-content: center;
+    }
+
+    .card.locked {
+      position: relative;
+    }
+
+    .card.locked::after {
+      content: "ログイン後に利用できます";
+      position: absolute;
+      inset: auto 12px 12px 12px;
+      min-height: 34px;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius);
+      background: rgba(19,32,51,.9);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .two-col {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+      gap: 14px;
+      align-items: start;
+    }
+
+    .panel {
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 8px 22px rgba(24, 39, 58, .06);
+    }
+
+    .feature-list {
+      display: grid;
+      gap: 12px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+
+    .feature-list li {
+      display: flex;
+      gap: 11px;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .feature-list strong {
+      display: block;
+      color: var(--ink);
+    }
+
+    .notice {
+      display: grid;
+      gap: 12px;
+    }
+
+    .notice-item {
+      padding-bottom: 12px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .notice-item:last-child {
+      padding-bottom: 0;
+      border-bottom: 0;
+    }
+
+    .notice time {
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .notice p {
+      margin: 5px 0 0;
+      line-height: 1.65;
+    }
+
+    .empty {
+      display: none;
+      padding: 24px;
+      border: 1px dashed var(--line);
+      border-radius: var(--radius);
+      color: var(--muted);
+      text-align: center;
+      background: rgba(255,255,255,.62);
+    }
+
+    .empty.visible { display: block; }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 30;
+      display: none;
+      place-items: center;
+      padding: 20px;
+      background: rgba(15, 24, 36, .62);
+    }
+
+    .modal-backdrop.open { display: grid; }
+
+    .modal {
+      width: min(440px, 100%);
+      padding: 20px;
+      border-radius: var(--radius);
+      background: #fff;
+      box-shadow: var(--shadow);
+    }
+
+    .modal-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 12px;
+    }
+
+    .modal h2 {
+      margin: 0;
+      font-size: 22px;
+    }
+
+    .modal p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+
+    .modal .field label { color: var(--ink); }
+
+    .modal .field input {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .close-button {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      display: grid;
+      place-items: center;
+      background: #fff;
+      color: var(--ink);
+    }
+
+    .auth-switch {
+      margin-top: 12px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+
+    .auth-switch button {
+      border: 0;
+      background: transparent;
+      color: var(--brand-dark);
+      font-weight: 800;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 40;
+      max-width: 340px;
+      padding: 12px 14px;
+      border-radius: var(--radius);
+      background: #132033;
+      color: #fff;
+      box-shadow: var(--shadow);
+      transform: translateY(90px);
+      opacity: 0;
+      transition: .2s ease;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    @media (max-width: 900px) {
+      .nav a { display: none; }
+      .hero, .two-col { grid-template-columns: 1fr; }
+      .hero-visual { min-height: 320px; }
+      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .topbar { align-items: flex-start; }
+      .nav { flex-wrap: wrap; justify-content: flex-end; }
+      .hero-copy { padding: 28px 20px; }
+      h1 { font-size: 38px; }
+      .section-head { align-items: stretch; flex-direction: column; }
+      .search-wrap { width: 100%; }
+      .grid { grid-template-columns: 1fr; }
+      .locked-banner { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#">
+      <span class="brand-mark">IDM</span>
+      <span>IDM Hub<br>Tools and Games</span>
+    </a>
+    <nav class="nav" aria-label="メインメニュー">
+      <a href="#tools">ツール</a>
+      <a href="#about">特徴</a>
+      <a href="#news">お知らせ</a>
+      <button class="ghost-button" type="button" data-auth-open="login">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>
+        ログイン
+      </button>
+      <button class="primary-button" type="button" data-auth-open="signup">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6"></path><path d="M22 11h-6"></path></svg>
+        無料登録
+      </button>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">Public beta</p>
+        <h1>便利ツールとミニゲームを、ひとつのHubに。</h1>
+        <p>IDM Hubは、日常で使える小さなWebツールや気軽に遊べるゲームをまとめた公開サービスです。アカウント登録後に、各コンテンツを利用できます。</p>
+        <div class="hero-actions">
+          <button class="primary-button" type="button" data-auth-open="signup">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+            はじめる
+          </button>
+          <a class="ghost-button" href="#tools">
+            <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+            ラインナップ
+          </a>
+        </div>
+      </div>
+      <div class="hero-visual" aria-label="IDM Hubのサービスイメージ">
+        <form class="login-panel" id="heroLoginForm">
+          <h2>ログインして利用開始</h2>
+          <div class="field">
+            <label for="heroEmail">メールアドレス</label>
+            <input id="heroEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+          </div>
+          <div class="field">
+            <label for="heroPassword">パスワード</label>
+            <input id="heroPassword" name="password" type="password" autocomplete="current-password" placeholder="8文字以上" required>
+          </div>
+          <button class="primary-button" type="submit">ログイン</button>
+          <p class="login-note">このHTMLではFirebase接続を入れていません。接続後はFirestoreのユーザーデータと照合する実装に差し替えてください。</p>
+        </form>
+      </div>
+    </section>
+
+    <section class="section" id="tools">
+      <div class="section-head">
+        <div>
+          <h2>利用できるコンテンツ</h2>
+          <p>未ログイン状態ではプレビューのみ表示します。実際のリンク遷移はログイン判定後に有効化する想定です。</p>
+        </div>
+        <div class="search-wrap" role="search">
+          <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="searchInput" type="search" placeholder="名前、説明、カテゴリで検索">
+        </div>
+      </div>
+
+      <div class="filters" aria-label="カテゴリフィルター">
+        <button class="chip active" type="button" data-filter="all">すべて</button>
+        <button class="chip" type="button" data-filter="tool">ツール</button>
+        <button class="chip" type="button" data-filter="game">ゲーム</button>
+        <button class="chip" type="button" data-filter="utility">日常</button>
+        <button class="chip" type="button" data-filter="dev">開発</button>
+      </div>
+
+      <div class="locked-banner">
+        <span>コンテンツの利用にはアカウント登録が必要です。ログイン後にカードの「開く」ボタンを有効化します。</span>
+        <button class="ghost-button" type="button" data-auth-open="signup">登録する</button>
+      </div>
+
+      <div class="grid" id="toolGrid">
+        <article class="card locked" data-category="tool dev" data-keywords="json formatter validate api">
+          <div class="card-top">
+            <div class="tool-icon"><svg class="icon" viewBox="0 0 24 24"><path d="m10 9-3 3 3 3"></path><path d="m14 9 3 3-3 3"></path><path d="M5 4h14v16H5z"></path></svg></div>
+            <span class="badge">開発ツール</span>
+          </div>
+          <h3>JSON Formatter</h3>
+          <p>JSONの整形、圧縮、簡易バリデーションを行うツールです。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+
+        <article class="card locked" data-category="tool utility" data-keywords="qr code url share">
+          <div class="card-top">
+            <div class="tool-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v7h-7z"></path><path d="M3 14h7v7H3z"></path><path d="M14 14h2v2h-2zM19 14h2v2h-2zM14 19h2v2h-2zM19 19h2v2h-2z"></path></svg></div>
+            <span class="badge">日常ツール</span>
+          </div>
+          <h3>QR Code Maker</h3>
+          <p>URLやテキストをQRコード化して、スマホ共有を簡単にします。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+
+        <article class="card locked" data-category="tool dev" data-keywords="base64 encode decode text">
+          <div class="card-top">
+            <div class="tool-icon dark"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg></div>
+            <span class="badge">開発ツール</span>
+          </div>
+          <h3>Base64 Converter</h3>
+          <p>文字列のBase64エンコード、デコードをブラウザで確認できます。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+
+        <article class="card locked" data-category="game" data-keywords="typing game speed">
+          <div class="card-top">
+            <div class="tool-icon yellow"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"></path><path d="M8 21h8"></path><path d="M12 17v4"></path></svg></div>
+            <span class="badge">ゲーム</span>
+          </div>
+          <h3>Typing Sprint</h3>
+          <p>短時間で遊べるタイピングゲーム。スコア保存にも拡張できます。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+
+        <article class="card locked" data-category="game" data-keywords="puzzle logic block">
+          <div class="card-top">
+            <div class="tool-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M8 3h8v6H8z"></path><path d="M3 15h6v6H3z"></path><path d="M15 15h6v6h-6z"></path><path d="M12 9v3"></path><path d="M6 15v-3h12v3"></path></svg></div>
+            <span class="badge">ゲーム</span>
+          </div>
+          <h3>Logic Blocks</h3>
+          <p>手軽に遊べるロジックパズル。ランキング要素を追加しやすい枠です。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+
+        <article class="card locked" data-category="tool utility" data-keywords="memo note template">
+          <div class="card-top">
+            <div class="tool-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg></div>
+            <span class="badge">日常ツール</span>
+          </div>
+          <h3>Quick Memo</h3>
+          <p>ブラウザ上でメモを作成し、あとでクラウド保存に対応する想定です。</p>
+          <button class="primary-button" type="button" data-requires-login>開く</button>
+        </article>
+      </div>
+      <div class="empty" id="emptyState">一致するコンテンツがありません。</div>
+    </section>
+
+    <section class="section two-col" id="about">
+      <div class="panel">
+        <div class="section-head">
+          <div>
+            <h2>サービス設計</h2>
+            <p>一般公開に合わせ、登録とログインを前提にした導線へ変更しています。</p>
+          </div>
+        </div>
+        <ul class="feature-list">
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>未ログイン制御</strong>カードは見せつつ、利用開始時にログインを求める構成です。</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>Firebase差し替え前提</strong>このHTMLではダミー処理のみ。Firestore連携を後から追加できます。</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>静的公開対応</strong>GitHub PagesとFirebase Hostingのどちらにも配置しやすい単体構成です。</span></li>
+        </ul>
+      </div>
+
+      <aside class="panel notice" id="news">
+        <div>
+          <h2>お知らせ</h2>
+        </div>
+        <div class="notice-item">
+          <time datetime="2026-05-16">2026.05.16</time>
+          <p>IDM Hubの公開向けプロトタイプを作成しました。</p>
+        </div>
+        <div class="notice-item">
+          <time datetime="2026-05-16">2026.05.16</time>
+          <p>Firebase設定は別途追加する想定で、現在はHTML内の仮処理のみです。</p>
+        </div>
+      </aside>
+    </section>
+  </main>
+
+  <div class="modal-backdrop" id="authModal" aria-hidden="true">
+    <section class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
+      <div class="modal-head">
+        <div>
+          <h2 id="authTitle">ログイン</h2>
+          <p id="authLead">登録済みのメールアドレスとパスワードを入力してください。</p>
+        </div>
+        <button class="close-button" type="button" id="closeModal" aria-label="閉じる">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+        </button>
+      </div>
+      <form id="authForm">
+        <div class="field">
+          <label for="authName">表示名</label>
+          <input id="authName" name="name" type="text" autocomplete="name" placeholder="IDMユーザー">
+        </div>
+        <div class="field">
+          <label for="authEmail">メールアドレス</label>
+          <input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
+        </div>
+        <div class="field">
+          <label for="authPassword">パスワード</label>
+          <input id="authPassword" name="password" type="password" autocomplete="current-password" placeholder="8文字以上" required>
+        </div>
+        <button class="primary-button" type="submit" id="authSubmit">ログイン</button>
+      </form>
+      <p class="auth-switch">
+        <span id="authSwitchText">アカウントがない方は</span>
+        <button type="button" id="authSwitchButton">無料登録</button>
+      </p>
+    </section>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script>
+    const cards = [...document.querySelectorAll(".card")];
+    const filterButtons = [...document.querySelectorAll("[data-filter]")];
+    const searchInput = document.querySelector("#searchInput");
+    const emptyState = document.querySelector("#emptyState");
+    const modal = document.querySelector("#authModal");
+    const authTitle = document.querySelector("#authTitle");
+    const authLead = document.querySelector("#authLead");
+    const authName = document.querySelector("#authName");
+    const authSubmit = document.querySelector("#authSubmit");
+    const authSwitchText = document.querySelector("#authSwitchText");
+    const authSwitchButton = document.querySelector("#authSwitchButton");
+    const toast = document.querySelector("#toast");
+    let currentFilter = "all";
+    let authMode = "login";
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("show");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 3200);
+    }
+
+    function setAuthMode(mode) {
+      authMode = mode;
+      const isSignup = mode === "signup";
+      authTitle.textContent = isSignup ? "無料登録" : "ログイン";
+      authLead.textContent = isSignup ? "アカウントを作成すると、Hub内のコンテンツを利用できます。" : "登録済みのメールアドレスとパスワードを入力してください。";
+      authName.parentElement.style.display = isSignup ? "grid" : "none";
+      authName.required = isSignup;
+      authSubmit.textContent = isSignup ? "登録する" : "ログイン";
+      authSwitchText.textContent = isSignup ? "すでにアカウントがある方は" : "アカウントがない方は";
+      authSwitchButton.textContent = isSignup ? "ログイン" : "無料登録";
+    }
+
+    function openModal(mode = "login") {
+      setAuthMode(mode);
+      modal.classList.add("open");
+      modal.setAttribute("aria-hidden", "false");
+      document.querySelector("#authEmail").focus();
+    }
+
+    function closeModal() {
+      modal.classList.remove("open");
+      modal.setAttribute("aria-hidden", "true");
+    }
+
+    function applyFilters() {
+      const query = searchInput.value.trim().toLowerCase();
+      let visible = 0;
+
+      cards.forEach((card) => {
+        const category = card.dataset.category;
+        const text = `${card.textContent} ${card.dataset.keywords}`.toLowerCase();
+        const okFilter = currentFilter === "all" || category.includes(currentFilter);
+        const okSearch = !query || text.includes(query);
+        const ok = okFilter && okSearch;
+        card.style.display = ok ? "" : "none";
+        if (ok) visible += 1;
+      });
+
+      emptyState.classList.toggle("visible", visible === 0);
+    }
+
+    filterButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        currentFilter = button.dataset.filter;
+        filterButtons.forEach((item) => item.classList.toggle("active", item === button));
+        applyFilters();
+      });
+    });
+
+    searchInput.addEventListener("input", applyFilters);
+
+    document.querySelectorAll("[data-auth-open]").forEach((button) => {
+      button.addEventListener("click", () => openModal(button.dataset.authOpen));
+    });
+
+    document.querySelectorAll("[data-requires-login]").forEach((button) => {
+      button.addEventListener("click", () => {
+        showToast("このコンテンツを使うにはログインが必要です。");
+        openModal("login");
+      });
+    });
+
+    document.querySelector("#closeModal").addEventListener("click", closeModal);
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) closeModal();
+    });
+
+    authSwitchButton.addEventListener("click", () => {
+      setAuthMode(authMode === "signup" ? "login" : "signup");
+    });
+
+    document.querySelector("#authForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      const password = new FormData(event.currentTarget).get("password");
+      const base64Password = btoa(unescape(encodeURIComponent(password)));
+      console.info("Firestore integration placeholder:", { authMode, passwordBase64: base64Password });
+      showToast("現在はFirebase未接続のため、認証処理は仮表示です。");
+    });
+
+    document.querySelector("#heroLoginForm").addEventListener("submit", (event) => {
+      event.preventDefault();
+      showToast("現在はFirebase未接続のため、ログイン画面のデモのみ動作します。");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") closeModal();
+    });
+
+    setAuthMode("login");
+  </script>
+</body>
+</html>
