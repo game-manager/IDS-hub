@@ -2,6 +2,23 @@
 
 このプロジェクトの `index.html` は、Firebaseをまだ読み込まない静的プロトタイプです。ここでは、あとからFirestoreベースの登録・ログインに差し替えるための手順をまとめます。
 
+## 作成済みFirebaseプロジェクト
+
+CodexからFirebase CLIを使い、新規Firebaseプロジェクトを作成済みです。
+
+```text
+Project ID: idm-hub-20260516
+Project Name: IDM Hub
+Console: https://console.firebase.google.com/project/idm-hub-20260516/overview
+```
+
+このリポジトリには、Firebase Hosting用に以下のファイルを追加しています。
+
+```text
+.firebaserc
+firebase.json
+```
+
 ## 前提
 
 - Firebase Authenticationは使わない
@@ -160,7 +177,6 @@ Firebase CLIをインストールします。
 ```bash
 npm install -g firebase-tools
 firebase login
-firebase init hosting
 ```
 
 設定例:
@@ -174,7 +190,7 @@ automatic builds/deploys with GitHub: 任意
 公開:
 
 ```bash
-firebase deploy
+firebase deploy --only hosting --project idm-hub-20260516
 ```
 
 ## GitHub Pages

@@ -18,3 +18,9 @@
 ## Deploy
 
 GitHub PagesまたはFirebase Hostingで公開できます。詳しい手順は `FIREBASE_SETUP.md` を参照してください。
+
+Firebase Hosting project:
+
+```text
+idm-hub-20260516
+```
