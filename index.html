@@ -19,8 +19,24 @@
       --red: #d64562;
       --dark: #172232;
       --shadow: 0 20px 55px rgba(24, 39, 58, .14);
-      --radius: 8px;
+      --radius: 12px;
+      --radius-sm: 8px;
       font-family: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    [data-theme="dark"] {
+      --bg: #0d1117;
+      --ink: #e6edf3;
+      --muted: #8b949e;
+      --panel: #161b22;
+      --line: #30363d;
+      --brand: #58a6ff;
+      --brand-dark: #79c0ff;
+      --green: #3fb950;
+      --yellow: #d29922;
+      --red: #f85149;
+      --dark: #0d1117;
+      --shadow: 0 16px 48px rgba(0, 0, 0, .4);
     }
 
     * { box-sizing: border-box; }
@@ -29,10 +45,11 @@
       margin: 0;
       min-height: 100vh;
       background:
-        radial-gradient(circle at 18% 8%, rgba(9, 105, 218, .12), transparent 28%),
-        radial-gradient(circle at 88% 22%, rgba(0, 135, 111, .11), transparent 30%),
+        radial-gradient(circle at 18% 8%, rgba(9, 105, 218, .08), transparent 28%),
+        radial-gradient(circle at 88% 22%, rgba(0, 135, 111, .07), transparent 30%),
         var(--bg);
       color: var(--ink);
+      transition: background .3s, color .3s;
     }
 
     a { color: inherit; }
@@ -46,64 +63,80 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      gap: 18px;
-      padding: 14px clamp(16px, 4vw, 42px);
-      border-bottom: 1px solid rgba(220, 228, 238, .9);
-      background: rgba(255, 255, 255, .88);
+      gap: 14px;
+      padding: 12px clamp(16px, 4vw, 42px);
+      border-bottom: 1px solid var(--line);
+      background: color-mix(in srgb, var(--panel) 85%, transparent);
       backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .brand {
       display: inline-flex;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       min-width: 0;
       text-decoration: none;
       font-weight: 800;
     }
 
     .brand-mark {
-      width: 54px;
-      height: 40px;
-      border-radius: var(--radius);
+      width: 42px;
+      height: 32px;
+      border-radius: var(--radius-sm);
       display: block;
       flex: 0 0 auto;
       object-fit: contain;
-      background: #fff;
-      padding: 4px;
-      box-shadow: 0 12px 26px rgba(9, 105, 218, .22);
+      background: var(--panel);
+      padding: 3px;
+      box-shadow: 0 8px 20px rgba(9, 105, 218, .18);
     }
 
     .brand span {
       display: block;
       color: var(--muted);
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
     }
 
     .nav {
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 6px;
     }
 
-    .nav a,
-    .ghost-button,
-    .primary-button {
-      min-height: 40px;
+    .nav-link {
+      min-height: 36px;
       display: inline-flex;
       align-items: center;
-      gap: 8px;
-      padding: 0 14px;
-      border-radius: var(--radius);
-      font-weight: 800;
+      padding: 0 12px;
+      border-radius: var(--radius-sm);
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 700;
       text-decoration: none;
-      white-space: nowrap;
+      transition: color .15s, background .15s;
     }
 
-    .nav a {
-      color: var(--muted);
-      font-size: 14px;
+    .nav-link:hover {
+      color: var(--ink);
+      background: color-mix(in srgb, var(--ink) 6%, transparent);
+    }
+
+    .ghost-button,
+    .primary-button {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 14px;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 13px;
+      text-decoration: none;
+      white-space: nowrap;
+      border: 0;
+      transition: transform .12s, box-shadow .12s, background .15s;
     }
 
     .ghost-button {
@@ -112,15 +145,33 @@
       color: var(--ink);
     }
 
+    .ghost-button:hover {
+      border-color: var(--brand);
+      color: var(--brand);
+    }
+
     .primary-button {
-      border: 0;
       background: var(--brand);
       color: #fff;
+      box-shadow: 0 4px 12px rgba(9, 105, 218, .25);
+    }
+
+    .primary-button:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(9, 105, 218, .35);
+    }
+
+    .primary-button:disabled,
+    .ghost-button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
     }
 
     .icon {
-      width: 18px;
-      height: 18px;
+      width: 16px;
+      height: 16px;
       stroke: currentColor;
       stroke-width: 2;
       fill: none;
@@ -129,6 +180,97 @@
       flex: 0 0 auto;
     }
 
+    .theme-toggle {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      display: grid;
+      place-items: center;
+      color: var(--muted);
+      transition: color .15s, border-color .15s;
+    }
+
+    .theme-toggle:hover {
+      color: var(--brand);
+      border-color: var(--brand);
+    }
+
+    .hamburger {
+      display: none;
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      place-items: center;
+      color: var(--ink);
+    }
+
+    .mobile-menu {
+      display: none;
+      position: fixed;
+      inset: 0;
+      z-index: 25;
+      background: color-mix(in srgb, var(--bg) 96%, transparent);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      padding: 80px 24px 24px;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .mobile-menu.open { display: flex; }
+
+    .mobile-menu a,
+    .mobile-menu button {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 48px;
+      padding: 0 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      font-weight: 700;
+      font-size: 15px;
+      text-decoration: none;
+      width: 100%;
+    }
+
+    .mobile-menu-close {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius-sm);
+      background: var(--panel);
+      display: grid;
+      place-items: center;
+      color: var(--ink);
+    }
+
+    .user-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      min-height: 36px;
+      padding: 0 12px;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--green) 12%, transparent);
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 700;
+    }
+
+    .user-badge .icon { width: 14px; height: 14px; }
+
+    .hidden { display: none !important; }
+
     main {
       width: min(1180px, 100%);
       margin: 0 auto;
@@ -136,320 +278,155 @@
     }
 
     .hero {
-      min-height: 430px;
-      display: grid;
-      grid-template-columns: minmax(0, 1.04fr) minmax(320px, .96fr);
-      overflow: hidden;
+      padding: clamp(40px, 6vw, 72px) clamp(24px, 4vw, 48px);
       border-radius: var(--radius);
       background:
-        linear-gradient(135deg, rgba(9, 105, 218, .34), rgba(0, 135, 111, .16)),
-        #101b2d;
+        linear-gradient(135deg, rgba(9, 105, 218, .28), rgba(0, 135, 111, .12)),
+        var(--dark);
       box-shadow: var(--shadow);
-    }
-
-    .hero-copy {
-      padding: clamp(30px, 5vw, 56px);
       color: #fff;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      gap: 22px;
+      text-align: center;
     }
 
-    .eyebrow {
-      margin: 0;
+    .hero .eyebrow {
+      display: inline-block;
+      margin: 0 0 14px;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.12);
       color: #89e3d3;
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 800;
+      letter-spacing: .04em;
     }
 
     h1 {
       margin: 0;
-      max-width: 720px;
-      font-size: clamp(38px, 5vw, 64px);
-      line-height: 1.04;
-      letter-spacing: 0;
+      font-size: clamp(28px, 5vw, 48px);
+      line-height: 1.2;
+      letter-spacing: -.02em;
     }
 
-    .hero-copy p:not(.eyebrow) {
-      margin: 0;
-      max-width: 640px;
+    .hero-desc {
+      margin: 16px auto 0;
+      max-width: 580px;
       color: #d7e2ef;
-      font-size: 16px;
-      line-height: 1.85;
+      font-size: clamp(14px, 1.6vw, 16px);
+      line-height: 1.8;
     }
+
+    .hero-stats {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-top: 28px;
+      flex-wrap: wrap;
+    }
+
+    .hero-stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .hero-stat strong { font-size: 22px; }
+    .hero-stat span { font-size: 11px; color: #b0c8e4; font-weight: 700; }
 
     .hero-actions {
       display: flex;
+      justify-content: center;
       flex-wrap: wrap;
       gap: 10px;
+      margin-top: 28px;
     }
 
-    .hero-points {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 10px;
-      max-width: 620px;
-    }
-
-    .hero-point {
-      padding: 12px;
-      border: 1px solid rgba(255,255,255,.16);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.07);
-    }
-
-    .hero-point strong {
-      display: block;
-      color: #fff;
-      font-size: 18px;
-    }
-
-    .hero-point span {
-      display: block;
-      margin-top: 3px;
-      color: #c4d4e4;
-      font-size: 12px;
-      font-weight: 700;
+    .hero .primary-button {
+      background: #fff;
+      color: var(--dark);
+      box-shadow: 0 6px 18px rgba(0,0,0,.2);
     }
 
     .hero .ghost-button {
-      border-color: rgba(255,255,255,.26);
+      border-color: rgba(255,255,255,.3);
       background: rgba(255,255,255,.08);
       color: #fff;
     }
 
-    .hero-visual {
-      position: relative;
-      min-height: 430px;
-      background:
-        linear-gradient(145deg, rgba(255,255,255,.11), rgba(255,255,255,0)),
-        radial-gradient(circle at 50% 20%, rgba(255,255,255,.18), transparent 34%),
-        rgba(255,255,255,.06);
-    }
-
-    .hero-visual::before,
-    .hero-visual::after {
-      content: "";
-      position: absolute;
-      border: 1px solid rgba(255,255,255,.18);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.1);
-      box-shadow: 0 18px 44px rgba(0,0,0,.14);
-    }
-
-    .hero-visual::before {
-      left: 30px;
-      top: 92px;
-      width: 190px;
-      height: 214px;
-      background:
-        linear-gradient(#fff 0 0) 20px 22px / 74px 10px no-repeat,
-        linear-gradient(rgba(255,255,255,.46) 0 0) 20px 50px / 142px 8px no-repeat,
-        linear-gradient(rgba(255,255,255,.28) 0 0) 20px 78px / 118px 8px no-repeat,
-        linear-gradient(rgba(255,255,255,.28) 0 0) 20px 106px / 134px 8px no-repeat,
-        linear-gradient(rgba(255,255,255,.28) 0 0) 20px 134px / 104px 8px no-repeat,
-        rgba(255,255,255,.12);
-    }
-
-    .hero-visual::after {
-      left: 66px;
-      bottom: 46px;
-      width: 138px;
-      height: 56px;
-      background:
-        linear-gradient(90deg, #89e3d3, #fff) 16px 17px / 78px 8px no-repeat,
-        linear-gradient(rgba(255,255,255,.32) 0 0) 16px 33px / 104px 7px no-repeat,
-        rgba(255,255,255,.13);
-    }
-
-    .showcase-card {
-      position: absolute;
-      top: 24px;
-      right: 24px;
-      width: min(360px, calc(100% - 48px));
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,.24);
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.9);
-      color: var(--ink);
-      box-shadow: 0 24px 50px rgba(0,0,0,.18);
-    }
-
-    .showcase-card img {
-      width: 128px;
-      height: auto;
-      display: block;
-      margin-bottom: 18px;
-    }
-
-    .showcase-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 8px;
-    }
-
-    .showcase-stat {
-      padding: 10px;
-      border-radius: var(--radius);
-      background: #f3f7fb;
-    }
-
-    .showcase-stat strong {
-      display: block;
-      font-size: 20px;
-      line-height: 1;
-    }
-
-    .showcase-stat span {
-      display: block;
-      margin-top: 5px;
-      color: var(--muted);
-      font-size: 11px;
-      font-weight: 800;
-    }
-
-    .login-panel {
-      position: absolute;
-      right: 24px;
-      bottom: 24px;
-      width: min(360px, calc(100% - 48px));
-      padding: 18px;
-      border: 1px solid rgba(255,255,255,.22);
-      border-radius: var(--radius);
-      background: rgba(10, 18, 28, .82);
-      color: #fff;
-      backdrop-filter: blur(14px);
-    }
-
-    .login-panel h2 {
-      margin: 0 0 12px;
-      font-size: 18px;
-    }
-
-    .field {
-      display: grid;
-      gap: 7px;
-      margin-top: 12px;
-    }
-
-    .field label {
-      color: #c8d7e8;
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .field input {
-      width: 100%;
-      min-height: 42px;
-      padding: 0 12px;
-      border: 1px solid rgba(255,255,255,.24);
-      border-radius: var(--radius);
-      outline: 0;
-      background: rgba(255,255,255,.1);
+    .hero .ghost-button:hover {
+      border-color: rgba(255,255,255,.6);
       color: #fff;
     }
 
-    .field input::placeholder { color: rgba(255,255,255,.58); }
-
-    .login-panel .primary-button {
-      width: 100%;
-      justify-content: center;
-      margin-top: 14px;
-      background: #fff;
-      color: #123a5f;
-    }
-
-    .login-note {
-      margin: 12px 0 0;
-      color: #b8c9db;
-      font-size: 12px;
-      line-height: 1.65;
-    }
-
-    .login-support {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      margin-top: 12px;
-      color: #c8d7e8;
-      font-size: 12px;
-    }
-
-    .login-support a {
-      color: #fff;
-      font-weight: 800;
-      text-decoration: none;
-    }
-
-    .section {
-      margin-top: 30px;
-    }
+    .section { margin-top: 36px; }
 
     .section-head {
       display: flex;
       justify-content: space-between;
       align-items: end;
       gap: 16px;
-      margin-bottom: 14px;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
     }
 
-    .section-head h2 {
-      margin: 0;
-      font-size: 23px;
-      letter-spacing: 0;
-    }
-
-    .section-head p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.7;
-    }
+    .section-head h2 { margin: 0; font-size: 22px; letter-spacing: -.01em; }
+    .section-head p { margin: 4px 0 0; color: var(--muted); font-size: 14px; line-height: 1.7; }
 
     .search-wrap {
       position: relative;
-      width: min(360px, 100%);
+      width: min(320px, 100%);
     }
 
     .search-wrap svg {
       position: absolute;
-      left: 13px;
+      left: 12px;
       top: 50%;
       transform: translateY(-50%);
-      color: #77879a;
+      color: var(--muted);
     }
 
     .search-wrap input {
       width: 100%;
-      min-height: 42px;
-      padding: 0 12px 0 42px;
+      min-height: 40px;
+      padding: 0 12px 0 38px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       outline: 0;
       background: var(--panel);
+      color: var(--ink);
+      font-size: 13px;
+      transition: border-color .15s, box-shadow .15s;
+    }
+
+    .search-wrap input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, .1);
     }
 
     .filters {
       display: flex;
       flex-wrap: wrap;
-      gap: 8px;
+      gap: 6px;
       margin-bottom: 14px;
     }
 
     .chip {
-      min-height: 34px;
-      padding: 0 13px;
+      min-height: 32px;
+      padding: 0 12px;
       border: 1px solid var(--line);
       border-radius: 999px;
       background: var(--panel);
       color: var(--muted);
-      font-weight: 800;
+      font-weight: 700;
+      font-size: 12px;
+      transition: all .15s;
     }
+
+    .chip:hover { border-color: var(--brand); color: var(--brand); }
 
     .chip.active {
       border-color: var(--brand);
-      background: rgba(9,105,218,.1);
+      background: color-mix(in srgb, var(--brand) 10%, transparent);
       color: var(--brand-dark);
     }
 
@@ -459,49 +436,50 @@
       justify-content: space-between;
       gap: 14px;
       margin-bottom: 14px;
-      padding: 13px 14px;
-      border: 1px solid #f0d18a;
-      border-radius: var(--radius);
-      background: #fff8e7;
-      color: #644500;
-      font-size: 14px;
+      padding: 12px 14px;
+      border: 1px solid color-mix(in srgb, var(--yellow) 40%, transparent);
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--yellow) 8%, var(--panel));
+      color: var(--ink);
+      font-size: 13px;
       line-height: 1.6;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 14px;
     }
 
     .card {
-      min-height: 200px;
       padding: 18px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--panel);
-      box-shadow: 0 8px 22px rgba(24, 39, 58, .06);
+      box-shadow: 0 4px 12px rgba(24, 39, 58, .04);
       display: flex;
       flex-direction: column;
-      gap: 14px;
-      transition: transform .15s ease, box-shadow .15s ease;
+      gap: 12px;
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s;
     }
 
     .card:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 34px rgba(24, 39, 58, .11);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 28px rgba(24, 39, 58, .1);
+      border-color: color-mix(in srgb, var(--brand) 30%, var(--line));
     }
 
     .card-top {
       display: flex;
       justify-content: space-between;
-      gap: 12px;
+      align-items: center;
+      gap: 10px;
     }
 
     .tool-icon {
-      width: 42px;
-      height: 42px;
-      border-radius: var(--radius);
+      width: 38px;
+      height: 38px;
+      border-radius: var(--radius-sm);
       display: grid;
       place-items: center;
       color: #fff;
@@ -512,59 +490,44 @@
     .tool-icon.yellow { background: var(--yellow); }
     .tool-icon.red { background: var(--red); }
     .tool-icon.dark { background: #27384f; }
+    [data-theme="dark"] .tool-icon.dark { background: #3d5168; }
 
     .badge {
-      height: 26px;
+      height: 24px;
       padding: 0 9px;
       border-radius: 999px;
       display: inline-flex;
       align-items: center;
-      background: #eef3f8;
+      background: color-mix(in srgb, var(--ink) 6%, transparent);
       color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
       white-space: nowrap;
     }
 
-    .card h3 {
-      margin: 0;
-      font-size: 18px;
-    }
+    .card h3 { margin: 0; font-size: 16px; }
+    .card p { margin: 0; flex: 1; color: var(--muted); font-size: 13px; line-height: 1.7; }
+    .card .primary-button, .card .ghost-button { justify-content: center; font-size: 13px; }
 
-    .card p {
-      margin: 0;
-      flex: 1;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.7;
-    }
-
-    .card .primary-button,
-    .card .ghost-button {
-      justify-content: center;
-    }
-
-    .card.locked {
-      position: relative;
-    }
+    .card.locked { position: relative; }
 
     .card.locked::after {
-      content: "ログイン後に利用できます";
+      content: "\30ED\30B0\30A4\30F3\5F8C\306B\5229\7528\3067\304D\307E\3059";
       position: absolute;
       inset: auto 12px 12px 12px;
-      min-height: 34px;
+      min-height: 32px;
       display: grid;
       place-items: center;
-      border-radius: var(--radius);
-      background: rgba(19,32,51,.9);
+      border-radius: var(--radius-sm);
+      background: rgba(19,32,51,.88);
       color: #fff;
-      font-size: 12px;
-      font-weight: 800;
+      font-size: 11px;
+      font-weight: 700;
     }
 
     .two-col {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(300px, 380px);
+      grid-template-columns: minmax(0, 1fr) minmax(280px, 340px);
       gap: 14px;
       align-items: start;
     }
@@ -574,94 +537,47 @@
       border: 1px solid var(--line);
       border-radius: var(--radius);
       background: var(--panel);
-      box-shadow: 0 8px 22px rgba(24, 39, 58, .06);
+      box-shadow: 0 4px 12px rgba(24, 39, 58, .04);
     }
 
-    .feature-list {
-      display: grid;
-      gap: 12px;
-      margin: 0;
-      padding: 0;
-      list-style: none;
-    }
-
-    .feature-list li {
-      display: flex;
-      gap: 11px;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
-    .feature-list strong {
-      display: block;
-      color: var(--ink);
-    }
-
-    .notice {
-      display: grid;
-      gap: 0;
-    }
-
-    .notice-item {
-      padding: 14px 0;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .notice-item:last-child {
-      padding-bottom: 0;
-      border-bottom: 0;
-    }
-
-    .notice time {
-      color: var(--muted);
-      font-size: 12px;
-      font-weight: 800;
-    }
-
-    .notice p {
-      margin: 5px 0 0;
-      line-height: 1.65;
-    }
-
-    .notice p strong {
-      color: var(--ink);
-    }
+    .feature-list { display: grid; gap: 10px; margin: 0; padding: 0; list-style: none; }
+    .feature-list li { display: flex; gap: 10px; color: var(--muted); font-size: 13px; line-height: 1.65; }
+    .feature-list strong { display: block; color: var(--ink); }
+    .feature-list .icon { color: var(--green); flex-shrink: 0; margin-top: 2px; }
 
     .workflow {
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 12px;
+      gap: 10px;
       margin-top: 14px;
     }
 
     .workflow-item {
-      padding: 16px;
+      padding: 14px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: #fbfcfe;
+      border-radius: var(--radius-sm);
+      background: color-mix(in srgb, var(--bg) 50%, var(--panel));
     }
 
-    .workflow-item strong {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--ink);
-    }
+    .workflow-item strong { display: block; margin-bottom: 6px; color: var(--ink); font-size: 13px; }
+    .workflow-item p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.65; }
 
-    .workflow-item p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.65;
-    }
+    .notice { display: grid; gap: 0; }
+    .notice-item { padding: 12px 0; border-bottom: 1px solid var(--line); }
+    .notice-item:last-child { padding-bottom: 0; border-bottom: 0; }
+    .notice time { color: var(--muted); font-size: 11px; font-weight: 700; }
+    .notice p { margin: 4px 0 0; font-size: 13px; line-height: 1.65; }
+    .notice p strong { color: var(--ink); }
 
     .empty {
       display: none;
       padding: 24px;
       border: 1px dashed var(--line);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       color: var(--muted);
       text-align: center;
-      background: rgba(255,255,255,.62);
+      font-size: 14px;
+      background: color-mix(in srgb, var(--panel) 60%, transparent);
     }
 
     .empty.visible { display: block; }
@@ -673,16 +589,18 @@
       display: none;
       place-items: center;
       padding: 20px;
-      background: rgba(15, 24, 36, .62);
+      background: rgba(15, 24, 36, .55);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
     }
 
     .modal-backdrop.open { display: grid; }
 
     .modal {
-      width: min(440px, 100%);
-      padding: 20px;
+      width: min(420px, 100%);
+      padding: 24px;
       border-radius: var(--radius);
-      background: #fff;
+      background: var(--panel);
       box-shadow: var(--shadow);
     }
 
@@ -691,94 +609,122 @@
       justify-content: space-between;
       gap: 12px;
       align-items: start;
-      margin-bottom: 12px;
+      margin-bottom: 16px;
     }
 
-    .modal h2 {
-      margin: 0;
-      font-size: 22px;
-    }
+    .modal h2 { margin: 0; font-size: 20px; }
+    .modal p { margin: 4px 0 0; color: var(--muted); font-size: 13px; line-height: 1.65; }
 
-    .modal p {
-      margin: 6px 0 0;
-      color: var(--muted);
-      line-height: 1.65;
-    }
-
+    .field { display: grid; gap: 6px; margin-top: 12px; }
+    .field label { color: var(--muted); font-size: 12px; font-weight: 700; }
     .modal .field label { color: var(--ink); }
 
-    .modal .field input {
+    .field input {
+      width: 100%;
+      min-height: 40px;
+      padding: 0 12px;
       border: 1px solid var(--line);
-      background: #fff;
+      border-radius: var(--radius-sm);
+      outline: 0;
+      background: var(--panel);
       color: var(--ink);
+      font-size: 14px;
+      transition: border-color .15s, box-shadow .15s;
     }
+
+    .field input:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px rgba(9, 105, 218, .1);
+    }
+
+    .field input::placeholder { color: var(--muted); opacity: .6; }
 
     .close-button {
-      width: 36px;
-      height: 36px;
+      width: 34px;
+      height: 34px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       display: grid;
       place-items: center;
-      background: #fff;
+      background: var(--panel);
       color: var(--ink);
+      transition: border-color .15s;
     }
 
-    .auth-switch {
-      margin-top: 12px;
-      color: var(--muted);
-      font-size: 13px;
-      text-align: center;
-    }
+    .close-button:hover { border-color: var(--brand); }
 
-    .auth-switch button {
-      border: 0;
-      background: transparent;
-      color: var(--brand-dark);
-      font-weight: 800;
-    }
+    .auth-switch { margin-top: 14px; color: var(--muted); font-size: 13px; text-align: center; }
+    .auth-switch button { border: 0; background: transparent; color: var(--brand); font-weight: 700; }
 
     .toast {
       position: fixed;
       right: 18px;
       bottom: 18px;
       z-index: 40;
-      max-width: 340px;
-      padding: 12px 14px;
-      border-radius: var(--radius);
-      background: #132033;
+      max-width: 320px;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      background: var(--dark);
       color: #fff;
+      font-size: 13px;
       box-shadow: var(--shadow);
       transform: translateY(90px);
       opacity: 0;
       transition: .2s ease;
     }
 
-    .toast.show {
-      transform: translateY(0);
-      opacity: 1;
+    [data-theme="dark"] .toast { background: var(--panel); border: 1px solid var(--line); }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    .back-to-top {
+      position: fixed;
+      right: 18px;
+      bottom: 70px;
+      z-index: 8;
+      width: 40px;
+      height: 40px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: var(--panel);
+      color: var(--muted);
+      display: grid;
+      place-items: center;
+      box-shadow: 0 4px 12px rgba(0,0,0,.1);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s, transform .2s;
+      transform: translateY(10px);
     }
 
+    .back-to-top.visible { opacity: 1; pointer-events: auto; transform: translateY(0); }
+    .back-to-top:hover { color: var(--brand); border-color: var(--brand); }
+
+    footer {
+      margin-top: 48px;
+      padding: 24px clamp(14px, 4vw, 42px);
+      border-top: 1px solid var(--line);
+      text-align: center;
+    }
+
+    footer p { margin: 0; color: var(--muted); font-size: 12px; line-height: 1.8; }
+    footer a { color: var(--brand); text-decoration: none; font-weight: 700; }
+
     @media (max-width: 900px) {
-      .nav a { display: none; }
-      .hero, .two-col { grid-template-columns: 1fr; }
-      .hero-visual { min-height: auto; padding-bottom: 1px; }
-      .hero-visual::before, .hero-visual::after { display: none; }
-      .showcase-card { position: relative; top: auto; right: auto; width: calc(100% - 40px); margin: 20px; }
-      .login-panel { position: relative; right: auto; bottom: auto; width: calc(100% - 40px); margin: 0 20px 20px; }
-      .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .hero-points, .workflow { grid-template-columns: 1fr; }
+      .nav-link { display: none; }
+      .hamburger { display: grid; }
+      .two-col { grid-template-columns: 1fr; }
+      .workflow { grid-template-columns: 1fr; }
     }
 
     @media (max-width: 620px) {
-      .topbar { align-items: flex-start; }
-      .nav { flex-wrap: wrap; justify-content: flex-end; }
-      .hero-copy { padding: 28px 20px; }
-      h1 { font-size: 38px; }
-      .section-head { align-items: stretch; flex-direction: column; }
+      .topbar { padding: 10px 14px; }
+      .hero { padding: 28px 18px; }
+      h1 { font-size: 26px; }
+      .section-head { flex-direction: column; align-items: stretch; }
       .search-wrap { width: 100%; }
       .grid { grid-template-columns: 1fr; }
-      .locked-banner { align-items: flex-start; flex-direction: column; }
+      .locked-banner { flex-direction: column; align-items: flex-start; }
+      .hero-stats { gap: 16px; }
     }
   </style>
 </head>
@@ -786,230 +732,230 @@
   <header class="topbar">
     <a class="brand" href="#">
       <img class="brand-mark" src="assets/ids-logo.png" alt="IDS">
-      <span>IDS Hub<br>Tools and Games</span>
+      <span>IDS Hub<br>Tools &amp; Games</span>
     </a>
-    <nav class="nav" aria-label="メインメニュー">
-      <a href="#tools">ツール</a>
-      <a href="#about">特徴</a>
-      <a href="#news">お知らせ</a>
-      <a href="admin.html">管理</a>
-      <button class="ghost-button" type="button" data-auth-open="login">
+    <nav class="nav" aria-label="\u30e1\u30a4\u30f3\u30ca\u30d3\u30b2\u30fc\u30b7\u30e7\u30f3">
+      <a class="nav-link" href="#tools">\u30c4\u30fc\u30eb</a>
+      <a class="nav-link" href="#about">\u7279\u5fb4</a>
+      <a class="nav-link" href="#news">\u304a\u77e5\u3089\u305b</a>
+      <a class="nav-link" href="admin.html">\u7ba1\u7406</a>
+      <span class="user-badge hidden" id="userBadge">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+        <span id="userBadgeName"></span>
+      </span>
+      <button class="ghost-button hidden" type="button" id="logoutButton">\u30ed\u30b0\u30a2\u30a6\u30c8</button>
+      <button class="ghost-button" type="button" data-auth-open="login" id="loginBtn">
         <svg class="icon" viewBox="0 0 24 24"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path><path d="m10 17 5-5-5-5"></path><path d="M15 12H3"></path></svg>
-        ログイン
+        \u30ed\u30b0\u30a4\u30f3
       </button>
-      <button class="primary-button" type="button" data-auth-open="signup">
-        <svg class="icon" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M19 8v6"></path><path d="M22 11h-6"></path></svg>
-        無料登録
+      <button class="primary-button" type="button" data-auth-open="signup" id="signupBtn">\u7121\u6599\u767b\u9332</button>
+      <button class="theme-toggle" type="button" id="themeToggle" aria-label="\u30c6\u30fc\u30de\u5207\u66ff">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg>
+      </button>
+      <button class="hamburger" type="button" id="hamburgerBtn" aria-label="\u30e1\u30cb\u30e5\u30fc\u3092\u958b\u304f">
+        <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
       </button>
     </nav>
   </header>
 
+  <nav class="mobile-menu" id="mobileMenu" aria-label="\u30e2\u30d0\u30a4\u30eb\u30e1\u30cb\u30e5\u30fc">
+    <button class="mobile-menu-close" type="button" id="closeMobileMenu" aria-label="\u30e1\u30cb\u30e5\u30fc\u3092\u9589\u3058\u308b">
+      <svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
+    </button>
+    <a href="#tools" data-close-menu>\u30c4\u30fc\u30eb</a>
+    <a href="#about" data-close-menu>\u7279\u5fb4</a>
+    <a href="#news" data-close-menu>\u304a\u77e5\u3089\u305b</a>
+    <a href="admin.html">\u7ba1\u7406</a>
+    <button type="button" data-auth-open="login" data-close-menu>\u30ed\u30b0\u30a4\u30f3</button>
+    <button type="button" data-auth-open="signup" data-close-menu>\u7121\u6599\u767b\u9332</button>
+  </nav>
+
   <main>
     <section class="hero">
-      <div class="hero-copy">
-        <p class="eyebrow">Public beta</p>
-        <h1>便利ツールとミニゲームを、ひとつのHubに。</h1>
-        <p>IDS Hubは、作業に役立つWebツールと短時間で遊べるゲームをまとめたポータルです。気になるコンテンツを探して、ログイン後すぐに利用できます。</p>
-        <div class="hero-points" aria-label="IDS Hubの特徴">
-          <div class="hero-point"><strong>Tools</strong><span>日常と開発をサポート</span></div>
-          <div class="hero-point"><strong>Games</strong><span>すきま時間に遊べる</span></div>
-          <div class="hero-point"><strong>Account</strong><span>自分用の入口をキープ</span></div>
-        </div>
-        <div class="hero-actions">
-          <button class="primary-button" type="button" data-auth-open="signup">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
-            はじめる
-          </button>
-          <a class="ghost-button" href="#tools">
-            <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
-            ラインナップ
-          </a>
-        </div>
+      <span class="eyebrow">Public Beta</span>
+      <h1>\u4fbf\u5229\u30c4\u30fc\u30eb\u3068\u30df\u30cb\u30b2\u30fc\u30e0\u3092\u3001<br>\u3072\u3068\u3064\u306eHub\u306b\u3002</h1>
+      <p class="hero-desc">IDS Hub\u306f\u3001\u4f5c\u696d\u306b\u5f79\u7acb\u3064Web\u30c4\u30fc\u30eb\u3068\u77ed\u6642\u9593\u3067\u904a\u3079\u308b\u30b2\u30fc\u30e0\u3092\u307e\u3068\u3081\u305f\u30dd\u30fc\u30bf\u30eb\u3067\u3059\u3002\u7121\u6599\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u4f5c\u3063\u3066\u3001\u3059\u3050\u306b\u5229\u7528\u3092\u59cb\u3081\u3089\u308c\u307e\u3059\u3002</p>
+      <div class="hero-stats">
+        <div class="hero-stat"><strong id="heroToolCount">6</strong><span>\u30b3\u30f3\u30c6\u30f3\u30c4</span></div>
+        <div class="hero-stat"><strong>24h</strong><span>\u3044\u3064\u3067\u3082\u5229\u7528\u53ef</span></div>
+        <div class="hero-stat"><strong>Free</strong><span>\u7121\u6599\u30a2\u30ab\u30a6\u30f3\u30c8</span></div>
       </div>
-      <div class="hero-visual" aria-label="IDS Hubのサービスイメージ">
-        <div class="showcase-card">
-          <img src="assets/ids-logo.png" alt="IDS">
-          <div class="showcase-grid">
-            <div class="showcase-stat"><strong id="heroToolCount">6</strong><span>Contents</span></div>
-            <div class="showcase-stat"><strong>24h</strong><span>Open</span></div>
-            <div class="showcase-stat"><strong>Free</strong><span>Account</span></div>
-          </div>
-        </div>
-        <form class="login-panel" id="heroLoginForm">
-          <h2>ログインして利用開始</h2>
-          <div class="field">
-            <label for="heroEmail">メールアドレス</label>
-            <input id="heroEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
-          </div>
-          <div class="field">
-            <label for="heroPassword">パスワード</label>
-            <input id="heroPassword" name="password" type="password" autocomplete="current-password" placeholder="8文字以上" required>
-          </div>
-          <button class="primary-button" type="submit">ログイン</button>
-          <div class="login-support">
-            <span>初めての方は無料登録から始められます。</span>
-            <a href="#" data-auth-open="signup">登録する</a>
-          </div>
-        </form>
+      <div class="hero-actions">
+        <button class="primary-button" type="button" data-auth-open="signup">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>
+          \u306f\u3058\u3081\u308b
+        </button>
+        <a class="ghost-button" href="#tools">
+          <svg class="icon" viewBox="0 0 24 24"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+          \u30e9\u30a4\u30f3\u30ca\u30c3\u30d7\u3092\u898b\u308b
+        </a>
       </div>
     </section>
 
     <section class="section" id="tools">
       <div class="section-head">
         <div>
-          <h2>利用できるコンテンツ</h2>
-          <p>ツールやゲームは随時追加されます。検索やカテゴリで、今使いたいものをすばやく見つけられます。</p>
+          <h2>\u5229\u7528\u3067\u304d\u308b\u30b3\u30f3\u30c6\u30f3\u30c4</h2>
+          <p>\u691c\u7d22\u3084\u30ab\u30c6\u30b4\u30ea\u3067\u3001\u4eca\u4f7f\u3044\u305f\u3044\u3082\u306e\u3092\u3059\u3070\u3084\u304f\u898b\u3064\u3051\u3089\u308c\u307e\u3059\u3002</p>
         </div>
         <div class="search-wrap" role="search">
           <svg class="icon" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-          <input id="searchInput" type="search" placeholder="名前、説明、カテゴリで検索">
+          <input id="searchInput" type="search" placeholder="\u540d\u524d\u3084\u30ab\u30c6\u30b4\u30ea\u3067\u691c\u7d22...">
         </div>
       </div>
 
-      <div class="filters" aria-label="カテゴリフィルター">
-        <button class="chip active" type="button" data-filter="all">すべて</button>
-        <button class="chip" type="button" data-filter="tool">ツール</button>
-        <button class="chip" type="button" data-filter="game">ゲーム</button>
-        <button class="chip" type="button" data-filter="utility">日常</button>
-        <button class="chip" type="button" data-filter="dev">開発</button>
+      <div class="filters" aria-label="\u30ab\u30c6\u30b4\u30ea\u30d5\u30a3\u30eb\u30bf\u30fc">
+        <button class="chip active" type="button" data-filter="all">\u3059\u3079\u3066</button>
+        <button class="chip" type="button" data-filter="tool">\u30c4\u30fc\u30eb</button>
+        <button class="chip" type="button" data-filter="game">\u30b2\u30fc\u30e0</button>
+        <button class="chip" type="button" data-filter="utility">\u65e5\u5e38</button>
+        <button class="chip" type="button" data-filter="dev">\u958b\u767a</button>
       </div>
 
-      <div class="locked-banner">
-        <span>コンテンツの利用にはアカウント登録が必要です。ログインすると各カードから直接開けます。</span>
-        <button class="ghost-button" type="button" data-auth-open="signup">登録する</button>
+      <div class="locked-banner" id="lockedBanner">
+        <span id="lockedBannerText">\u30b3\u30f3\u30c6\u30f3\u30c4\u306e\u5229\u7528\u306b\u306f\u30a2\u30ab\u30a6\u30f3\u30c8\u767b\u9332\u304c\u5fc5\u8981\u3067\u3059\u3002\u30ed\u30b0\u30a4\u30f3\u3059\u308b\u3068\u5404\u30ab\u30fc\u30c9\u304b\u3089\u76f4\u63a5\u958b\u3051\u307e\u3059\u3002</span>
+        <button class="ghost-button" type="button" data-auth-open="signup" id="lockedBannerBtn">\u767b\u9332\u3059\u308b</button>
       </div>
 
       <div class="grid" id="toolGrid">
         <article class="card locked" data-category="tool dev" data-keywords="json formatter validate api">
           <div class="card-top">
             <div class="tool-icon"><svg class="icon" viewBox="0 0 24 24"><path d="m10 9-3 3 3 3"></path><path d="m14 9 3 3-3 3"></path><path d="M5 4h14v16H5z"></path></svg></div>
-            <span class="badge">開発ツール</span>
+            <span class="badge">\u958b\u767a\u30c4\u30fc\u30eb</span>
           </div>
           <h3>JSON Formatter</h3>
-          <p>JSONの整形、圧縮、簡易バリデーションを行うツールです。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>JSON\u306e\u6574\u5f62\u3001\u5727\u7e2e\u3001\u7c21\u6613\u30d0\u30ea\u30c7\u30fc\u30b7\u30e7\u30f3\u3092\u884c\u3046\u30c4\u30fc\u30eb\u3067\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
 
         <article class="card locked" data-category="tool utility" data-keywords="qr code url share">
           <div class="card-top">
             <div class="tool-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M3 3h7v7H3z"></path><path d="M14 3h7v7h-7z"></path><path d="M3 14h7v7H3z"></path><path d="M14 14h2v2h-2zM19 14h2v2h-2zM14 19h2v2h-2zM19 19h2v2h-2z"></path></svg></div>
-            <span class="badge">日常ツール</span>
+            <span class="badge">\u65e5\u5e38\u30c4\u30fc\u30eb</span>
           </div>
           <h3>QR Code Maker</h3>
-          <p>URLやテキストをQRコード化して、スマホ共有を簡単にします。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>URL\u3084\u30c6\u30ad\u30b9\u30c8\u3092QR\u30b3\u30fc\u30c9\u5316\u3057\u3066\u3001\u30b9\u30de\u30db\u5171\u6709\u3092\u7c21\u5358\u306b\u3057\u307e\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
 
         <article class="card locked" data-category="tool dev" data-keywords="base64 encode decode text">
           <div class="card-top">
             <div class="tool-icon dark"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16"></path><path d="M4 12h16"></path><path d="M4 17h16"></path></svg></div>
-            <span class="badge">開発ツール</span>
+            <span class="badge">\u958b\u767a\u30c4\u30fc\u30eb</span>
           </div>
           <h3>Base64 Converter</h3>
-          <p>文字列のBase64エンコード、デコードをブラウザで確認できます。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>\u6587\u5b57\u5217\u306eBase64\u30a8\u30f3\u30b3\u30fc\u30c9\u3001\u30c7\u30b3\u30fc\u30c9\u3092\u30d6\u30e9\u30a6\u30b6\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
 
         <article class="card locked" data-category="game" data-keywords="typing game speed">
           <div class="card-top">
             <div class="tool-icon yellow"><svg class="icon" viewBox="0 0 24 24"><path d="M4 7h16v10H4z"></path><path d="M8 21h8"></path><path d="M12 17v4"></path></svg></div>
-            <span class="badge">ゲーム</span>
+            <span class="badge">\u30b2\u30fc\u30e0</span>
           </div>
           <h3>Typing Sprint</h3>
-          <p>短時間で遊べるタイピングゲーム。集中力のウォームアップに使えます。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>\u77ed\u6642\u9593\u3067\u904a\u3079\u308b\u30bf\u30a4\u30d4\u30f3\u30b0\u30b2\u30fc\u30e0\u3002\u96c6\u4e2d\u529b\u306e\u30a6\u30a9\u30fc\u30e0\u30a2\u30c3\u30d7\u306b\u4f7f\u3048\u307e\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
 
         <article class="card locked" data-category="game" data-keywords="puzzle logic block">
           <div class="card-top">
             <div class="tool-icon red"><svg class="icon" viewBox="0 0 24 24"><path d="M8 3h8v6H8z"></path><path d="M3 15h6v6H3z"></path><path d="M15 15h6v6h-6z"></path><path d="M12 9v3"></path><path d="M6 15v-3h12v3"></path></svg></div>
-            <span class="badge">ゲーム</span>
+            <span class="badge">\u30b2\u30fc\u30e0</span>
           </div>
           <h3>Logic Blocks</h3>
-          <p>手軽に遊べるロジックパズル。休憩時間に頭を切り替えられます。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>\u624b\u8efd\u306b\u904a\u3079\u308b\u30ed\u30b8\u30c3\u30af\u30d1\u30ba\u30eb\u3002\u4f11\u61a9\u6642\u9593\u306b\u982d\u3092\u5207\u308a\u66ff\u3048\u3089\u308c\u307e\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
 
         <article class="card locked" data-category="tool utility" data-keywords="memo note template">
           <div class="card-top">
             <div class="tool-icon green"><svg class="icon" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"></path><path d="M8 8h8"></path><path d="M8 12h8"></path><path d="M8 16h5"></path></svg></div>
-            <span class="badge">日常ツール</span>
+            <span class="badge">\u65e5\u5e38\u30c4\u30fc\u30eb</span>
           </div>
           <h3>Quick Memo</h3>
-          <p>思いついた内容をすぐ残せるメモツールです。作業中の小さな記録に使えます。</p>
-          <button class="primary-button" type="button" data-requires-login>開く</button>
+          <p>\u601d\u3044\u3064\u3044\u305f\u5185\u5bb9\u3092\u3059\u3050\u6b8b\u305b\u308b\u30e1\u30e2\u30c4\u30fc\u30eb\u3067\u3059\u3002\u4f5c\u696d\u4e2d\u306e\u5c0f\u3055\u306a\u8a18\u9332\u306b\u4f7f\u3048\u307e\u3059\u3002</p>
+          <button class="primary-button" type="button" data-requires-login>\u958b\u304f</button>
         </article>
       </div>
-      <div class="empty" id="emptyState">一致するコンテンツがありません。</div>
+      <div class="empty" id="emptyState">\u4e00\u81f4\u3059\u308b\u30b3\u30f3\u30c6\u30f3\u30c4\u304c\u3042\u308a\u307e\u305b\u3093\u3002</div>
     </section>
 
     <section class="section two-col" id="about">
       <div class="panel">
         <div class="section-head">
           <div>
-            <h2>IDS Hubでできること</h2>
-            <p>よく使うWebツールと息抜きのゲームを、迷わず開ける場所にまとめています。</p>
+            <h2>IDS Hub\u3067\u3067\u304d\u308b\u3053\u3068</h2>
+            <p>\u3088\u304f\u4f7f\u3046Web\u30c4\u30fc\u30eb\u3068\u606f\u629c\u304d\u306e\u30b2\u30fc\u30e0\u3092\u3001\u8ff7\u308f\u305a\u958b\u3051\u308b\u5834\u6240\u306b\u307e\u3068\u3081\u3066\u3044\u307e\u3059\u3002</p>
           </div>
         </div>
         <ul class="feature-list">
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>探しやすい</strong>カテゴリと検索で、目的のコンテンツへすぐアクセスできます。</span></li>
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>増やしやすい</strong>管理画面から新しいツールやゲームを追加できます。</span></li>
-          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>使いやすい</strong>PCでもスマートフォンでも、カードから迷わず開ける画面です。</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>\u63a2\u3057\u3084\u3059\u3044</strong>\u30ab\u30c6\u30b4\u30ea\u3068\u691c\u7d22\u3067\u3001\u76ee\u7684\u306e\u30b3\u30f3\u30c6\u30f3\u30c4\u3078\u3059\u3050\u30a2\u30af\u30bb\u30b9\u3067\u304d\u307e\u3059\u3002</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>\u5897\u3084\u3057\u3084\u3059\u3044</strong>\u7ba1\u7406\u753b\u9762\u304b\u3089\u65b0\u3057\u3044\u30c4\u30fc\u30eb\u3084\u30b2\u30fc\u30e0\u3092\u8ffd\u52a0\u3067\u304d\u307e\u3059\u3002</span></li>
+          <li><svg class="icon" viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"></path></svg><span><strong>\u4f7f\u3044\u3084\u3059\u3044</strong>PC\u3067\u3082\u30b9\u30de\u30fc\u30c8\u30d5\u30a9\u30f3\u3067\u3082\u3001\u30ab\u30fc\u30c9\u304b\u3089\u8ff7\u308f\u305a\u958b\u3051\u308b\u753b\u9762\u3067\u3059\u3002</span></li>
         </ul>
         <div class="workflow">
-          <div class="workflow-item"><strong>1. 見つける</strong><p>一覧、検索、カテゴリから気になるコンテンツを選びます。</p></div>
-          <div class="workflow-item"><strong>2. ログイン</strong><p>アカウントでログインすると、利用ボタンが有効になります。</p></div>
-          <div class="workflow-item"><strong>3. 開く</strong><p>カードのボタンから、そのままツールやゲームへ移動できます。</p></div>
+          <div class="workflow-item"><strong>1. \u898b\u3064\u3051\u308b</strong><p>\u4e00\u89a7\u3084\u691c\u7d22\u304b\u3089\u6c17\u306b\u306a\u308b\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u9078\u3073\u307e\u3059\u3002</p></div>
+          <div class="workflow-item"><strong>2. \u30ed\u30b0\u30a4\u30f3</strong><p>\u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u30ed\u30b0\u30a4\u30f3\u3059\u308b\u3068\u5229\u7528\u30dc\u30bf\u30f3\u304c\u6709\u52b9\u306b\u3002</p></div>
+          <div class="workflow-item"><strong>3. \u958b\u304f</strong><p>\u30ab\u30fc\u30c9\u306e\u30dc\u30bf\u30f3\u304b\u3089\u305d\u306e\u307e\u307e\u30c4\u30fc\u30eb\u3084\u30b2\u30fc\u30e0\u3078\u3002</p></div>
         </div>
       </div>
 
       <aside class="panel notice" id="news">
         <div>
-          <h2>お知らせ</h2>
+          <h2>\u304a\u77e5\u3089\u305b</h2>
         </div>
         <div id="announcementsList">
           <div class="notice-item">
             <time datetime="2026-05-16">2026.05.16</time>
-            <p>IDS Hubを公開しました。ツールとゲームは順次追加していきます。</p>
+            <p><strong>IDS Hub\u3092\u516c\u958b\u3057\u307e\u3057\u305f\u3002</strong><br>\u30c4\u30fc\u30eb\u3068\u30b2\u30fc\u30e0\u306f\u9806\u6b21\u8ffd\u52a0\u3057\u3066\u3044\u304d\u307e\u3059\u3002</p>
           </div>
           <div class="notice-item">
             <time datetime="2026-05-16">2026.05.16</time>
-            <p>アカウント登録とログインに対応しました。</p>
+            <p><strong>\u30a2\u30ab\u30a6\u30f3\u30c8\u767b\u9332\u306b\u5bfe\u5fdc\u3057\u307e\u3057\u305f\u3002</strong><br>\u7121\u6599\u767b\u9332\u5f8c\u306b\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u5229\u7528\u3067\u304d\u307e\u3059\u3002</p>
           </div>
         </div>
       </aside>
     </section>
   </main>
 
+  <footer>
+    <p>IDS Hub &mdash; \u4fbf\u5229\u30c4\u30fc\u30eb\u3068\u30df\u30cb\u30b2\u30fc\u30e0\u306e\u30dd\u30fc\u30bf\u30eb<br><a href="admin.html">\u7ba1\u7406\u753b\u9762</a></p>
+  </footer>
+
+  <button class="back-to-top" id="backToTop" aria-label="\u30da\u30fc\u30b8\u4e0a\u90e8\u306b\u623b\u308b">
+    <svg class="icon" viewBox="0 0 24 24"><path d="m18 15-6-6-6 6"></path></svg>
+  </button>
+
   <div class="modal-backdrop" id="authModal" aria-hidden="true">
     <section class="modal" role="dialog" aria-modal="true" aria-labelledby="authTitle">
       <div class="modal-head">
         <div>
-          <h2 id="authTitle">ログイン</h2>
-          <p id="authLead">登録済みのメールアドレスとパスワードを入力してください。</p>
+          <h2 id="authTitle">\u30ed\u30b0\u30a4\u30f3</h2>
+          <p id="authLead">\u767b\u9332\u6e08\u307f\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u3068\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002</p>
         </div>
-        <button class="close-button" type="button" id="closeModal" aria-label="閉じる">
+        <button class="close-button" type="button" id="closeModal" aria-label="\u9589\u3058\u308b">
           <svg class="icon" viewBox="0 0 24 24"><path d="M18 6 6 18"></path><path d="m6 6 12 12"></path></svg>
         </button>
       </div>
       <form id="authForm">
-        <div class="field">
-          <label for="authName">表示名</label>
-          <input id="authName" name="name" type="text" autocomplete="name" placeholder="IDSユーザー">
+        <div class="field" id="nameField">
+          <label for="authName">\u8868\u793a\u540d</label>
+          <input id="authName" name="name" type="text" autocomplete="name" placeholder="IDS\u30e6\u30fc\u30b6\u30fc">
         </div>
         <div class="field">
-          <label for="authEmail">メールアドレス</label>
+          <label for="authEmail">\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9</label>
           <input id="authEmail" name="email" type="email" autocomplete="email" placeholder="you@example.com" required>
         </div>
         <div class="field">
-          <label for="authPassword">パスワード</label>
-          <input id="authPassword" name="password" type="password" autocomplete="current-password" placeholder="8文字以上" required>
+          <label for="authPassword">\u30d1\u30b9\u30ef\u30fc\u30c9</label>
+          <input id="authPassword" name="password" type="password" autocomplete="current-password" placeholder="8\u6587\u5b57\u4ee5\u4e0a" required>
         </div>
-        <button class="primary-button" type="submit" id="authSubmit">ログイン</button>
+        <button class="primary-button" type="submit" id="authSubmit" style="width:100%;justify-content:center;margin-top:16px;">\u30ed\u30b0\u30a4\u30f3</button>
       </form>
       <p class="auth-switch">
-        <span id="authSwitchText">アカウントがない方は</span>
-        <button type="button" id="authSwitchButton">無料登録</button>
+        <span id="authSwitchText">\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u306a\u3044\u65b9\u306f</span>
+        <button type="button" id="authSwitchButton">\u7121\u6599\u767b\u9332</button>
       </p>
     </section>
   </div>
@@ -1051,28 +997,72 @@
     const authTitle = document.querySelector("#authTitle");
     const authLead = document.querySelector("#authLead");
     const authName = document.querySelector("#authName");
+    const nameField = document.querySelector("#nameField");
     const authSubmit = document.querySelector("#authSubmit");
     const authSwitchText = document.querySelector("#authSwitchText");
     const authSwitchButton = document.querySelector("#authSwitchButton");
     const toast = document.querySelector("#toast");
+    const backToTop = document.querySelector("#backToTop");
+    const mobileMenu = document.querySelector("#mobileMenu");
+    const userBadge = document.querySelector("#userBadge");
+    const userBadgeName = document.querySelector("#userBadgeName");
+    const logoutButton = document.querySelector("#logoutButton");
+    const loginBtn = document.querySelector("#loginBtn");
+    const signupBtn = document.querySelector("#signupBtn");
+    const lockedBannerText = document.querySelector("#lockedBannerText");
+    const lockedBannerBtn = document.querySelector("#lockedBannerBtn");
     let currentFilter = "all";
     let authMode = "login";
     let currentUser = null;
 
     let toolUrls = {};
-    let toolRegistry = {};
     const fallbackTools = [
-      { name: "JSON Formatter", description: "JSONの整形、圧縮、簡易バリデーションを行うツールです。", category: "tool dev", label: "開発ツール", url: "https://jsonformatter.org/", color: "blue", keywords: "json formatter validate api" },
-      { name: "QR Code Maker", description: "URLやテキストをQRコード化して、スマホ共有を簡単にします。", category: "tool utility", label: "日常ツール", url: "https://www.qr-code-generator.com/", color: "green", keywords: "qr code url share" },
-      { name: "Base64 Converter", description: "文字列のBase64エンコード、デコードをブラウザで確認できます。", category: "tool dev", label: "開発ツール", url: "https://www.base64decode.org/", color: "dark", keywords: "base64 encode decode text" },
-      { name: "Typing Sprint", description: "短時間で遊べるタイピングゲーム。集中力のウォームアップに使えます。", category: "game", label: "ゲーム", url: "https://monkeytype.com/", color: "yellow", keywords: "typing game speed" },
-      { name: "Logic Blocks", description: "手軽に遊べるロジックパズル。休憩時間に頭を切り替えられます。", category: "game", label: "ゲーム", url: "https://www.puzzle-nurikabe.com/", color: "red", keywords: "puzzle logic block" },
-      { name: "Quick Memo", description: "思いついた内容をすぐ残せるメモツールです。作業中の小さな記録に使えます。", category: "tool utility", label: "日常ツール", url: "https://keep.google.com/", color: "green", keywords: "memo note template" }
+      { name: "JSON Formatter", description: "JSON\u306e\u6574\u5f62\u3001\u5727\u7e2e\u3001\u7c21\u6613\u30d0\u30ea\u30c7\u30fc\u30b7\u30e7\u30f3\u3092\u884c\u3046\u30c4\u30fc\u30eb\u3067\u3059\u3002", category: "tool dev", label: "\u958b\u767a\u30c4\u30fc\u30eb", url: "https://jsonformatter.org/", color: "blue", keywords: "json formatter validate api" },
+      { name: "QR Code Maker", description: "URL\u3084\u30c6\u30ad\u30b9\u30c8\u3092QR\u30b3\u30fc\u30c9\u5316\u3057\u3066\u3001\u30b9\u30de\u30db\u5171\u6709\u3092\u7c21\u5358\u306b\u3057\u307e\u3059\u3002", category: "tool utility", label: "\u65e5\u5e38\u30c4\u30fc\u30eb", url: "https://www.qr-code-generator.com/", color: "green", keywords: "qr code url share" },
+      { name: "Base64 Converter", description: "\u6587\u5b57\u5217\u306eBase64\u30a8\u30f3\u30b3\u30fc\u30c9\u3001\u30c7\u30b3\u30fc\u30c9\u3092\u30d6\u30e9\u30a6\u30b6\u3067\u78ba\u8a8d\u3067\u304d\u307e\u3059\u3002", category: "tool dev", label: "\u958b\u767a\u30c4\u30fc\u30eb", url: "https://www.base64decode.org/", color: "dark", keywords: "base64 encode decode text" },
+      { name: "Typing Sprint", description: "\u77ed\u6642\u9593\u3067\u904a\u3079\u308b\u30bf\u30a4\u30d4\u30f3\u30b0\u30b2\u30fc\u30e0\u3002\u96c6\u4e2d\u529b\u306e\u30a6\u30a9\u30fc\u30e0\u30a2\u30c3\u30d7\u306b\u4f7f\u3048\u307e\u3059\u3002", category: "game", label: "\u30b2\u30fc\u30e0", url: "https://monkeytype.com/", color: "yellow", keywords: "typing game speed" },
+      { name: "Logic Blocks", description: "\u624b\u8efd\u306b\u904a\u3079\u308b\u30ed\u30b8\u30c3\u30af\u30d1\u30ba\u30eb\u3002\u4f11\u61a9\u6642\u9593\u306b\u982d\u3092\u5207\u308a\u66ff\u3048\u3089\u308c\u307e\u3059\u3002", category: "game", label: "\u30b2\u30fc\u30e0", url: "https://www.puzzle-nurikabe.com/", color: "red", keywords: "puzzle logic block" },
+      { name: "Quick Memo", description: "\u601d\u3044\u3064\u3044\u305f\u5185\u5bb9\u3092\u3059\u3050\u6b8b\u305b\u308b\u30e1\u30e2\u30c4\u30fc\u30eb\u3067\u3059\u3002\u4f5c\u696d\u4e2d\u306e\u5c0f\u3055\u306a\u8a18\u9332\u306b\u4f7f\u3048\u307e\u3059\u3002", category: "tool utility", label: "\u65e5\u5e38\u30c4\u30fc\u30eb", url: "https://keep.google.com/", color: "green", keywords: "memo note template" }
     ];
     const fallbackAnnouncements = [
-      { title: "IDS Hubを公開しました", body: "便利なツールとゲームを順次追加していきます。", publishedAt: "2026-05-16" },
-      { title: "アカウント登録に対応しました", body: "無料登録後、Hub内のコンテンツを利用できます。", publishedAt: "2026-05-16" }
+      { title: "IDS Hub\u3092\u516c\u958b\u3057\u307e\u3057\u305f", body: "\u4fbf\u5229\u306a\u30c4\u30fc\u30eb\u3068\u30b2\u30fc\u30e0\u3092\u9806\u6b21\u8ffd\u52a0\u3057\u3066\u3044\u304d\u307e\u3059\u3002", publishedAt: "2026-05-16" },
+      { title: "\u30a2\u30ab\u30a6\u30f3\u30c8\u767b\u9332\u306b\u5bfe\u5fdc\u3057\u307e\u3057\u305f", body: "\u7121\u6599\u767b\u9332\u5f8c\u3001Hub\u5185\u306e\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u5229\u7528\u3067\u304d\u307e\u3059\u3002", publishedAt: "2026-05-16" }
     ];
+
+    function getTheme() {
+      return localStorage.getItem("idsHubTheme") || "light";
+    }
+
+    function applyTheme(theme) {
+      document.documentElement.setAttribute("data-theme", theme);
+      localStorage.setItem("idsHubTheme", theme);
+    }
+
+    applyTheme(getTheme());
+
+    document.querySelector("#themeToggle").addEventListener("click", () => {
+      applyTheme(getTheme() === "light" ? "dark" : "light");
+    });
+
+    document.querySelector("#hamburgerBtn").addEventListener("click", () => {
+      mobileMenu.classList.add("open");
+    });
+
+    document.querySelector("#closeMobileMenu").addEventListener("click", () => {
+      mobileMenu.classList.remove("open");
+    });
+
+    mobileMenu.querySelectorAll("[data-close-menu]").forEach((item) => {
+      item.addEventListener("click", () => mobileMenu.classList.remove("open"));
+    });
+
+    window.addEventListener("scroll", () => {
+      backToTop.classList.toggle("visible", window.scrollY > 400);
+    }, { passive: true });
+
+    backToTop.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
 
     function showToast(message) {
       toast.textContent = message;
@@ -1084,13 +1074,13 @@
     function setAuthMode(mode) {
       authMode = mode;
       const isSignup = mode === "signup";
-      authTitle.textContent = isSignup ? "無料登録" : "ログイン";
-      authLead.textContent = isSignup ? "アカウントを作成すると、Hub内のコンテンツを利用できます。" : "登録済みのメールアドレスとパスワードを入力してください。";
-      authName.parentElement.style.display = isSignup ? "grid" : "none";
+      authTitle.textContent = isSignup ? "\u7121\u6599\u767b\u9332" : "\u30ed\u30b0\u30a4\u30f3";
+      authLead.textContent = isSignup ? "\u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u4f5c\u6210\u3059\u308b\u3068\u3001Hub\u5185\u306e\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u5229\u7528\u3067\u304d\u307e\u3059\u3002" : "\u767b\u9332\u6e08\u307f\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u3068\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002";
+      nameField.style.display = isSignup ? "grid" : "none";
       authName.required = isSignup;
-      authSubmit.textContent = isSignup ? "登録する" : "ログイン";
-      authSwitchText.textContent = isSignup ? "すでにアカウントがある方は" : "アカウントがない方は";
-      authSwitchButton.textContent = isSignup ? "ログイン" : "無料登録";
+      authSubmit.textContent = isSignup ? "\u767b\u9332\u3059\u308b" : "\u30ed\u30b0\u30a4\u30f3";
+      authSwitchText.textContent = isSignup ? "\u3059\u3067\u306b\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u3042\u308b\u65b9\u306f" : "\u30a2\u30ab\u30a6\u30f3\u30c8\u304c\u306a\u3044\u65b9\u306f";
+      authSwitchButton.textContent = isSignup ? "\u30ed\u30b0\u30a4\u30f3" : "\u7121\u6599\u767b\u9332";
     }
 
     function openModal(mode = "login") {
@@ -1111,7 +1101,7 @@
 
       cards.forEach((card) => {
         const category = card.dataset.category;
-        const text = `${card.textContent} ${card.dataset.keywords}`.toLowerCase();
+        const text = (card.textContent + " " + card.dataset.keywords).toLowerCase();
         const okFilter = currentFilter === "all" || category.includes(currentFilter);
         const okSearch = !query || text.includes(query);
         const ok = okFilter && okSearch;
@@ -1123,13 +1113,7 @@
     }
 
     function escapeHtml(value) {
-      return String(value || "").replace(/[&<>"']/g, (char) => ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        "\"": "&quot;",
-        "'": "&#39;"
-      }[char]));
+      return String(value || "").replace(/[&<>"']/g, (char) => ({"&": "&amp;", "<": "&lt;", ">": "&gt;", "\"": "&quot;", "'": "&#39;"}[char]));
     }
 
     function toDateValue(value) {
@@ -1148,38 +1132,17 @@
       const visibleItems = items.filter((item) => item.enabled !== false).slice(0, 5);
       announcementsList.innerHTML = visibleItems.map((item) => {
         const date = formatDate(item.publishedAt || item.createdAt);
-
-        return `
-          <div class="notice-item">
-            <time datetime="${escapeHtml(date.replaceAll(".", "-"))}">${escapeHtml(date)}</time>
-            <p><strong>${escapeHtml(item.title)}</strong><br>${escapeHtml(item.body)}</p>
-          </div>
-        `;
+        return '<div class="notice-item"><time datetime="' + escapeHtml(date.replaceAll(".", "-")) + '">' + escapeHtml(date) + '</time><p><strong>' + escapeHtml(item.title) + '</strong><br>' + escapeHtml(item.body) + '</p></div>';
       }).join("");
     }
 
     function renderTools(tools) {
       toolUrls = {};
-      toolRegistry = {};
       heroToolCount.textContent = String(tools.length);
       toolGrid.innerHTML = tools.map((tool) => {
         const color = ["green", "yellow", "red", "dark"].includes(tool.color) ? tool.color : "";
         toolUrls[tool.name] = tool.url || "#";
-        toolRegistry[tool.name] = tool;
-
-        return `
-          <article class="card locked" data-category="${escapeHtml(tool.category)}" data-keywords="${escapeHtml(tool.keywords || "")}">
-            <div class="card-top">
-              <div class="tool-icon ${escapeHtml(color)}">
-                <svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg>
-              </div>
-              <span class="badge">${escapeHtml(tool.label || "ツール")}</span>
-            </div>
-            <h3>${escapeHtml(tool.name)}</h3>
-            <p>${escapeHtml(tool.description)}</p>
-            <button class="primary-button" type="button" data-requires-login>開く</button>
-          </article>
-        `;
+        return '<article class="card locked" data-category="' + escapeHtml(tool.category) + '" data-keywords="' + escapeHtml(tool.keywords || "") + '"><div class="card-top"><div class="tool-icon ' + escapeHtml(color) + '"><svg class="icon" viewBox="0 0 24 24"><path d="M4 5h16v14H4z"></path><path d="M8 9h8"></path><path d="M8 13h5"></path></svg></div><span class="badge">' + escapeHtml(tool.label || "\u30c4\u30fc\u30eb") + '</span></div><h3>' + escapeHtml(tool.name) + '</h3><p>' + escapeHtml(tool.description) + '</p><button class="primary-button" type="button" data-requires-login>\u958b\u304f</button></article>';
       }).join("");
 
       cards = [...document.querySelectorAll(".card")];
@@ -1230,71 +1193,39 @@
       return btoa(unescape(encodeURIComponent(value)));
     }
 
-    function isStockGameTool(tool) {
-      const url = String(tool?.url || "");
-      return tool?.integrationKey === "stockGame" || tool?.id === "tool-1778903921054" || url.includes("game-manager.github.io/stock_sim");
-    }
-
-    function buildStockGameUrl(tool) {
-      const url = new URL(tool.url || "https://game-manager.github.io/stock_sim/");
-      url.searchParams.set("hub", "ids");
-      url.searchParams.set("hubEmail", currentUser.email || "");
-      url.searchParams.set("hubName", currentUser.name || currentUser.email || "");
-      url.searchParams.set("hubReturnUrl", location.href.split("#")[0]);
-      return url.toString();
-    }
-
-    async function markStockGameLinked() {
-      if (!currentUser?.email) return;
-      const userRef = doc(db, "users", normalizeEmail(currentUser.email));
-      await updateDoc(userRef, {
-        "linkedApps.stockGame.linked": true,
-        "linkedApps.stockGame.linkedEmail": normalizeEmail(currentUser.email),
-        "linkedApps.stockGame.displayName": currentUser.name || "",
-        "linkedApps.stockGame.lastOpenedAt": serverTimestamp(),
-        updatedAt: serverTimestamp()
-      });
-    }
-
-    function openToolFromCard(title) {
-      const tool = toolRegistry[title] || { name: title, url: toolUrls[title] || "#" };
-      let url = tool.url || "#";
-
-      if (isStockGameTool(tool)) {
-        url = buildStockGameUrl(tool);
-        markStockGameLinked()
-          .then(() => showToast("投資ゲームとHubアカウントを同じメールで連携します。"))
-          .catch((error) => {
-            console.warn("Failed to mark stock game link.", error);
-            showToast("投資ゲームを開きます。連携状態の保存はあとで再試行してください。");
-          });
-      }
-
-      window.open(url, "_blank", "noopener,noreferrer");
-    }
-
     function setLoading(isLoading) {
       authSubmit.disabled = isLoading;
-      authSubmit.textContent = isLoading ? "処理中..." : authMode === "signup" ? "登録する" : "ログイン";
+      authSubmit.textContent = isLoading ? "\u51e6\u7406\u4e2d..." : authMode === "signup" ? "\u767b\u9332\u3059\u308b" : "\u30ed\u30b0\u30a4\u30f3";
     }
 
     function setLoggedIn(user) {
       currentUser = user;
       sessionStorage.setItem("idsHubUser", JSON.stringify(user));
-      document.body.classList.add("is-logged-in");
       document.querySelectorAll(".card.locked").forEach((card) => card.classList.remove("locked"));
-      document.querySelector(".locked-banner span").textContent = `${user.name || user.email} としてログイン中です。コンテンツを利用できます。`;
-      document.querySelector(".locked-banner button").textContent = "ログイン済み";
-      document.querySelectorAll("[data-auth-open='login']").forEach((button) => {
-        button.textContent = "ログイン中";
-        button.disabled = true;
-      });
-      document.querySelectorAll("[data-auth-open='signup']").forEach((button) => {
-        button.textContent = "利用中";
-        button.disabled = true;
-      });
+      lockedBannerText.textContent = (user.name || user.email) + " \u3068\u3057\u3066\u30ed\u30b0\u30a4\u30f3\u4e2d";
+      lockedBannerBtn.classList.add("hidden");
+      loginBtn.classList.add("hidden");
+      signupBtn.classList.add("hidden");
+      logoutButton.classList.remove("hidden");
+      userBadge.classList.remove("hidden");
+      userBadgeName.textContent = user.name || user.email;
       closeModal();
     }
+
+    function setLoggedOut() {
+      currentUser = null;
+      sessionStorage.removeItem("idsHubUser");
+      document.querySelectorAll(".card").forEach((card) => card.classList.add("locked"));
+      lockedBannerText.textContent = "\u30b3\u30f3\u30c6\u30f3\u30c4\u306e\u5229\u7528\u306b\u306f\u30a2\u30ab\u30a6\u30f3\u30c8\u767b\u9332\u304c\u5fc5\u8981\u3067\u3059\u3002\u30ed\u30b0\u30a4\u30f3\u3059\u308b\u3068\u5404\u30ab\u30fc\u30c9\u304b\u3089\u76f4\u63a5\u958b\u3051\u307e\u3059\u3002";
+      lockedBannerBtn.classList.remove("hidden");
+      loginBtn.classList.remove("hidden");
+      signupBtn.classList.remove("hidden");
+      logoutButton.classList.add("hidden");
+      userBadge.classList.add("hidden");
+      showToast("\u30ed\u30b0\u30a2\u30a6\u30c8\u3057\u307e\u3057\u305f\u3002");
+    }
+
+    logoutButton.addEventListener("click", setLoggedOut);
 
     async function signupUser(formData) {
       const name = String(formData.get("name") || "").trim();
@@ -1302,13 +1233,13 @@
       const password = String(formData.get("password") || "");
 
       if (password.length < 8) {
-        throw new Error("パスワードは8文字以上で入力してください。");
+        throw new Error("\u30d1\u30b9\u30ef\u30fc\u30c9\u306f8\u6587\u5b57\u4ee5\u4e0a\u3067\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
       }
 
       const userRef = doc(db, "users", email);
       const existing = await getDoc(userRef);
       if (existing.exists()) {
-        throw new Error("このメールアドレスは登録済みです。ログインしてください。");
+        throw new Error("\u3053\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u306f\u767b\u9332\u6e08\u307f\u3067\u3059\u3002\u30ed\u30b0\u30a4\u30f3\u3057\u3066\u304f\u3060\u3055\u3044\u3002");
       }
 
       await setDoc(userRef, {
@@ -1332,18 +1263,15 @@
       const snapshot = await getDoc(userRef);
 
       if (!snapshot.exists()) {
-        throw new Error("メールアドレスまたはパスワードが違います。");
+        throw new Error("\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u307e\u305f\u306f\u30d1\u30b9\u30ef\u30fc\u30c9\u304c\u9055\u3044\u307e\u3059\u3002");
       }
 
       const user = snapshot.data();
       if (!user.enabled || user.passwordBase64 !== toBase64(password)) {
-        throw new Error("メールアドレスまたはパスワードが違います。");
+        throw new Error("\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u307e\u305f\u306f\u30d1\u30b9\u30ef\u30fc\u30c9\u304c\u9055\u3044\u307e\u3059\u3002");
       }
 
-      await updateDoc(userRef, {
-        lastLoginAt: serverTimestamp()
-      });
-
+      await updateDoc(userRef, { lastLoginAt: serverTimestamp() });
       return { name: user.name || "", email: user.email };
     }
 
@@ -1369,13 +1297,12 @@
       document.querySelectorAll("[data-requires-login]").forEach((button) => {
         button.addEventListener("click", () => {
           if (!currentUser) {
-            showToast("このコンテンツを使うにはログインが必要です。");
+            showToast("\u3053\u306e\u30b3\u30f3\u30c6\u30f3\u30c4\u3092\u4f7f\u3046\u306b\u306f\u30ed\u30b0\u30a4\u30f3\u304c\u5fc5\u8981\u3067\u3059\u3002");
             openModal("login");
             return;
           }
-
           const title = button.closest(".card").querySelector("h3").textContent.trim();
-          openToolFromCard(title);
+          window.open(toolUrls[title] || "#", "_blank", "noopener,noreferrer");
         });
       });
     }
@@ -1397,22 +1324,11 @@
         const formData = new FormData(event.currentTarget);
         const user = authMode === "signup" ? await signupUser(formData) : await loginUser(formData);
         setLoggedIn(user);
-        showToast(authMode === "signup" ? "登録が完了しました。" : "ログインしました。");
+        showToast(authMode === "signup" ? "\u767b\u9332\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f\u3002" : "\u30ed\u30b0\u30a4\u30f3\u3057\u307e\u3057\u305f\u3002");
       } catch (error) {
-        showToast(error.message || "認証に失敗しました。");
+        showToast(error.message || "\u8a8d\u8a3c\u306b\u5931\u6557\u3057\u307e\u3057\u305f\u3002");
       } finally {
         setLoading(false);
-      }
-    });
-
-    document.querySelector("#heroLoginForm").addEventListener("submit", async (event) => {
-      event.preventDefault();
-      try {
-        const user = await loginUser(new FormData(event.currentTarget));
-        setLoggedIn(user);
-        showToast("ログインしました。");
-      } catch (error) {
-        showToast(error.message || "ログインに失敗しました。");
       }
     });
 
