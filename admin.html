@@ -6,17 +6,24 @@
   <title>IDS Hub Admin</title>
   <style>
     :root {
-      --bg: #f4f7fb;
-      --ink: #132033;
-      --muted: #66758a;
+      --bg: #f0f4f9;
+      --ink: #0f172a;
+      --muted: #64748b;
       --panel: #fff;
-      --line: #dce4ee;
+      --line: #e2e8f0;
       --brand: #0969da;
-      --green: #00876f;
-      --red: #d64562;
-      --dark: #172232;
-      --radius: 8px;
-      --shadow: 0 16px 42px rgba(24, 39, 58, .12);
+      --brand-light: #dbeafe;
+      --success: #16a34a;
+      --success-light: #dcfce7;
+      --warning: #ea580c;
+      --warning-light: #fed7aa;
+      --danger: #dc2626;
+      --danger-light: #fee2e2;
+      --dark: #1e293b;
+      --radius: 12px;
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, .05);
+      --shadow: 0 4px 6px rgba(0, 0, 0, .07);
+      --shadow-lg: 0 10px 15px rgba(0, 0, 0, .1);
       font-family: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     }
 
@@ -24,129 +31,476 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background:
-        radial-gradient(circle at 14% 6%, rgba(9, 105, 218, .12), transparent 30%),
-        radial-gradient(circle at 88% 18%, rgba(0, 135, 111, .10), transparent 28%),
-        var(--bg);
+      background: linear-gradient(135deg, #f0f4f9 0%, #f8fafc 100%);
       color: var(--ink);
     }
     button, input, textarea, select { font: inherit; }
     button { cursor: pointer; }
-    a { color: inherit; }
+    a { color: inherit; text-decoration: none; }
 
+    /* ========== トップバー ========== */
     .topbar {
       position: sticky;
       top: 0;
-      z-index: 5;
+      z-index: 100;
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 16px;
-      padding: 14px clamp(16px, 4vw, 42px);
-      border-bottom: 1px solid rgba(220, 228, 238, .9);
-      background: rgba(255, 255, 255, .88);
-      backdrop-filter: blur(14px);
+      padding: 12px clamp(16px, 4vw, 32px);
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .95);
+      backdrop-filter: blur(10px);
+      box-shadow: var(--shadow-sm);
     }
 
-    .brand { display: flex; align-items: center; gap: 12px; font-weight: 850; text-decoration: none; }
-    .mark { width: 54px; height: 40px; border-radius: var(--radius); display: block; object-fit: contain; padding: 4px; background: #fff; box-shadow: 0 12px 26px rgba(9, 105, 218, .18); }
-    .brand small { display: block; color: var(--muted); font-size: 12px; }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+    .mark {
+      width: 40px;
+      height: 40px;
+      border-radius: calc(var(--radius) - 4px);
+      display: block;
+      object-fit: contain;
+      padding: 4px;
+      background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+      box-shadow: var(--shadow-sm);
+    }
+    .brand span {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .brand strong {
+      font-size: 16px;
+      line-height: 1;
+    }
+    .brand small {
+      font-size: 11px;
+      color: var(--muted);
+      font-weight: 500;
+    }
 
-    main { width: min(1180px, 100%); margin: 0 auto; padding: 26px clamp(14px, 4vw, 42px) 48px; }
+    .topbar-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* ========== メインコンテンツ ========== */
+    main {
+      width: min(1400px, 100%);
+      margin: 0 auto;
+      padding: 24px clamp(16px, 4vw, 32px);
+    }
+
     .hero {
       display: flex;
-      align-items: end;
+      align-items: flex-end;
       justify-content: space-between;
       gap: 20px;
-      margin-bottom: 18px;
-      padding: 26px;
-      border: 1px solid rgba(220, 228, 238, .85);
+      margin-bottom: 24px;
+      padding: 28px;
       border-radius: var(--radius);
-      background: linear-gradient(135deg, rgba(255,255,255,.94), rgba(241,247,253,.86));
-      box-shadow: 0 18px 42px rgba(24, 39, 58, .08);
+      background: linear-gradient(135deg, #0969da 0%, #0d47a1 100%);
+      color: white;
+      box-shadow: var(--shadow-lg);
     }
-    h1, h2, h3 { margin: 0; letter-spacing: 0; }
-    h1 { font-size: clamp(32px, 5vw, 52px); }
-    p { color: var(--muted); line-height: 1.7; }
+    .hero h1 {
+      margin: 0;
+      font-size: clamp(28px, 5vw, 40px);
+      font-weight: 800;
+      letter-spacing: -0.5px;
+    }
+    .hero p {
+      margin: 8px 0 0 0;
+      color: rgba(255, 255, 255, .9);
+      font-size: 14px;
+      line-height: 1.6;
+    }
 
-    .grid { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 16px; align-items: start; }
-    .summary-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px; margin-bottom: 16px; }
-    .summary-item { padding: 16px; border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(180deg, #fff, #f8fbff); }
-    .summary-item strong { display: block; font-size: 28px; line-height: 1; }
-    .summary-item span { display: block; margin-top: 7px; color: var(--muted); font-size: 12px; font-weight: 800; }
-    .panel {
-      padding: 18px;
-      border: 1px solid var(--line);
+    h1, h2, h3 { margin: 0; letter-spacing: 0; }
+    h2 {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: var(--ink);
+    }
+    h3 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: var(--ink);
+    }
+    p { color: var(--muted); line-height: 1.6; }
+
+    /* ========== ログインパネル ========== */
+    .login-container {
+      display: grid;
+      place-items: center;
+      min-height: calc(100vh - 100px);
+      padding: 20px;
+    }
+    .login-panel {
+      width: 100%;
+      max-width: 420px;
+      padding: 32px;
       border-radius: var(--radius);
       background: var(--panel);
+      box-shadow: var(--shadow-lg);
+    }
+    .login-panel h2 {
+      margin-bottom: 24px;
+      text-align: center;
+      font-size: 24px;
+    }
+
+    /* ========== サマリーグリッド ========== */
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .summary-item {
+      padding: 20px;
+      border-radius: var(--radius);
+      background: var(--panel);
+      border: 1px solid var(--line);
+      box-shadow: var(--shadow-sm);
+      transition: all .2s ease;
+    }
+    .summary-item:hover {
+      border-color: var(--brand);
+      box-shadow: var(--shadow);
+      transform: translateY(-2px);
+    }
+    .summary-item strong {
+      display: block;
+      font-size: 32px;
+      line-height: 1;
+      color: var(--brand);
+      margin-bottom: 8px;
+    }
+    .summary-item span {
+      display: block;
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* ========== タブナビゲーション ========== */
+    .tabs {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 20px;
+      border-bottom: 2px solid var(--line);
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+    .tab {
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 0 16px;
+      border: none;
+      border-bottom: 3px solid transparent;
+      background: none;
+      color: var(--muted);
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
+    }
+    .tab:hover {
+      color: var(--ink);
+    }
+    .tab.active {
+      color: var(--brand);
+      border-bottom-color: var(--brand);
+    }
+
+    /* ========== ビュー ========== */
+    .view {
+      display: none;
+    }
+    .view.active {
+      display: grid;
+      gap: 20px;
+    }
+    .view-grid {
+      display: grid;
+      grid-template-columns: 380px 1fr;
+      gap: 20px;
+      align-items: start;
+    }
+
+    /* ========== パネル ========== */
+    .panel {
+      padding: 24px;
+      border-radius: var(--radius);
+      background: var(--panel);
+      border: 1px solid var(--line);
       box-shadow: var(--shadow);
     }
 
-    .stack { display: grid; gap: 12px; }
-    .field { display: grid; gap: 7px; }
-    label { color: var(--muted); font-size: 12px; font-weight: 800; }
+    /* ========== フォーム ========== */
+    .stack {
+      display: grid;
+      gap: 16px;
+    }
+    .field {
+      display: grid;
+      gap: 8px;
+    }
+    label {
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
     input, textarea, select {
       width: 100%;
       min-height: 40px;
-      padding: 9px 10px;
+      padding: 10px 12px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: calc(var(--radius) - 4px);
       background: #fff;
       color: var(--ink);
       outline: 0;
+      font-size: 14px;
+      transition: all .2s ease;
     }
-    textarea { min-height: 92px; resize: vertical; }
-    input:focus, textarea:focus, select:focus { border-color: var(--brand); box-shadow: 0 0 0 3px rgba(9, 105, 218, .12); }
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+      font-family: inherit;
+    }
+    input:focus, textarea:focus, select:focus {
+      border-color: var(--brand);
+      box-shadow: 0 0 0 3px var(--brand-light);
+      background: #fff;
+    }
+    input:disabled, textarea:disabled, select:disabled {
+      background: #f8fafc;
+      color: var(--muted);
+      cursor: not-allowed;
+    }
 
-    .actions { display: flex; flex-wrap: wrap; gap: 8px; }
+    /* ========== ボタン ========== */
+    .actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
     .button {
       min-height: 40px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 8px;
-      padding: 0 13px;
+      padding: 0 16px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: #fff;
+      border-radius: calc(var(--radius) - 4px);
+      background: var(--panel);
       color: var(--ink);
-      font-weight: 800;
+      font-weight: 600;
+      font-size: 13px;
       text-decoration: none;
+      cursor: pointer;
+      transition: all .2s ease;
+      white-space: nowrap;
     }
-    .button.primary { border-color: var(--brand); background: var(--brand); color: #fff; }
-    .button.danger { border-color: var(--red); color: var(--red); }
-    .button:disabled { opacity: .55; cursor: not-allowed; }
+    .button:hover {
+      border-color: var(--muted);
+      background: #f8fafc;
+    }
+    .button.primary {
+      border-color: var(--brand);
+      background: var(--brand);
+      color: #fff;
+    }
+    .button.primary:hover {
+      background: #0860ca;
+      border-color: #0860ca;
+      box-shadow: var(--shadow);
+    }
+    .button.success {
+      border-color: var(--success);
+      background: var(--success);
+      color: #fff;
+    }
+    .button.success:hover {
+      background: #15803d;
+      border-color: #15803d;
+    }
+    .button.danger {
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+    .button.danger:hover {
+      background: var(--danger-light);
+    }
+    .button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
 
-    .tabs { display: flex; gap: 8px; margin-bottom: 12px; }
-    .tab.active { border-color: var(--brand); color: var(--brand); background: rgba(9, 105, 218, .08); }
-    .view { display: none; }
-    .view.active { display: grid; gap: 12px; }
-    .view-grid { display: grid; grid-template-columns: 360px minmax(0, 1fr); gap: 14px; align-items: start; }
-    .view-grid > form,
-    .view-grid > div {
-      padding: 16px;
-      border: 1px solid var(--line);
+    /* ========== テーブル ========== */
+    .table-wrapper {
+      overflow-x: auto;
       border-radius: var(--radius);
-      background: #fff;
+      border: 1px solid var(--line);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 14px;
+    }
+    th, td {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: middle;
+    }
+    th {
+      background: #f8fafc;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    tbody tr {
+      transition: background .2s ease;
+    }
+    tbody tr:hover {
+      background: #f8fafc;
+    }
+    tbody tr:last-child td {
+      border-bottom: none;
     }
 
-    table { width: 100%; border-collapse: collapse; font-size: 14px; }
-    th, td { padding: 10px; border-bottom: 1px solid var(--line); text-align: left; vertical-align: top; }
-    th { color: var(--muted); font-size: 12px; }
-    tr:hover td { background: #f8fbff; }
-    .status { display: inline-flex; align-items: center; min-height: 24px; padding: 0 8px; border-radius: 999px; background: #eef3f8; color: var(--muted); font-size: 12px; font-weight: 800; }
-    .status.on { background: #e8f7f2; color: var(--green); }
-    .status.off { background: #fff0f2; color: var(--red); }
-    .hidden { display: none !important; }
-    .toast { position: fixed; right: 18px; bottom: 18px; z-index: 20; max-width: 340px; padding: 12px 14px; border-radius: var(--radius); background: var(--dark); color: #fff; box-shadow: var(--shadow); opacity: 0; transform: translateY(80px); transition: .2s ease; }
-    .toast.show { opacity: 1; transform: translateY(0); }
+    /* ========== ステータスバッジ ========== */
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #f1f5f9;
+      color: var(--muted);
+      font-size: 12px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .status.on {
+      background: var(--success-light);
+      color: var(--success);
+    }
+    .status.off {
+      background: var(--danger-light);
+      color: var(--danger);
+    }
+    .status.warning {
+      background: var(--warning-light);
+      color: var(--warning);
+    }
 
-    @media (max-width: 860px) {
-      .grid { grid-template-columns: 1fr; }
-      .summary-grid { grid-template-columns: 1fr; }
-      .view-grid { grid-template-columns: 1fr; }
-      .hero { align-items: flex-start; flex-direction: column; }
-      table { display: block; overflow-x: auto; white-space: nowrap; }
+    /* ========== トースト通知 ========== */
+    .toast {
+      position: fixed;
+      right: 16px;
+      bottom: 16px;
+      z-index: 200;
+      max-width: 360px;
+      padding: 14px 16px;
+      border-radius: calc(var(--radius) - 4px);
+      background: var(--dark);
+      color: #fff;
+      box-shadow: var(--shadow-lg);
+      opacity: 0;
+      transform: translateY(100px);
+      transition: all .3s ease;
+      font-size: 14px;
+      line-height: 1.5;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ========== ユーティリティ ========== */
+    .hidden {
+      display: none !important;
+    }
+    .text-muted {
+      color: var(--muted);
+      font-size: 13px;
+    }
+    .text-sm {
+      font-size: 13px;
+    }
+
+    /* ========== レスポンシブ ========== */
+    @media (max-width: 1024px) {
+      .view-grid {
+        grid-template-columns: 1fr;
+      }
+      .summary-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    @media (max-width: 768px) {
+      main {
+        padding: 16px clamp(12px, 4vw, 20px);
+      }
+      .hero {
+        padding: 20px;
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .hero h1 {
+        font-size: 28px;
+      }
+      .summary-grid {
+        grid-template-columns: 1fr;
+      }
+      .tabs {
+        gap: 4px;
+      }
+      .tab {
+        padding: 0 12px;
+        font-size: 13px;
+      }
+      .panel {
+        padding: 16px;
+      }
+      .table-wrapper {
+        border: none;
+        border-radius: 0;
+      }
+      table {
+        font-size: 13px;
+      }
+      th, td {
+        padding: 10px 12px;
+      }
+      .button {
+        padding: 0 12px;
+        font-size: 12px;
+        min-height: 36px;
+      }
     }
   </style>
 </head>
@@ -154,160 +508,219 @@
   <header class="topbar">
     <a class="brand" href="index.html">
       <img class="mark" src="assets/ids-logo.png" alt="IDS">
-      <span>IDS Hub Admin<small>Content control</small></span>
+      <span>
+        <strong>IDS Hub Admin</strong>
+        <small>Content Control</small>
+      </span>
     </a>
-    <div class="actions">
-      <a class="button" href="index.html">サイトへ戻る</a>
+    <div class="topbar-actions">
+      <a class="button" href="index.html">← サイトへ戻る</a>
       <button class="button danger hidden" type="button" id="logoutButton">ログアウト</button>
     </div>
   </header>
 
   <main>
-    <section class="hero">
+    <section class="hero" id="loginHero">
       <div>
-        <h1>管理画面</h1>
-        <p>公開コンテンツ、ユーザー、お知らせをここから管理できます。</p>
+        <h1>管理画面へようこそ</h1>
+        <p>IDS Hubの公開コンテンツ、ユーザー、お知らせを一元管理できます。</p>
       </div>
     </section>
 
-    <section class="grid" style="margin-top: 16px;">
-      <form class="panel stack" id="loginPanel">
+    <!-- ========== ログインパネル ========== -->
+    <div class="login-container" id="loginContainer">
+      <form class="login-panel" id="loginPanel">
         <h2>管理者ログイン</h2>
-        <div class="field">
-          <label for="adminEmail">メールアドレス</label>
-          <input id="adminEmail" name="email" type="email" autocomplete="email" required>
+        <div class="stack">
+          <div class="field">
+            <label for="adminEmail">メールアドレス</label>
+            <input id="adminEmail" name="email" type="email" autocomplete="email" placeholder="admin@example.com" required>
+          </div>
+          <div class="field">
+            <label for="adminPassword">パスワード</label>
+            <input id="adminPassword" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required>
+          </div>
+          <button class="button primary" type="submit" style="width: 100%; margin-top: 8px;">ログイン</button>
         </div>
-        <div class="field">
-          <label for="adminPassword">パスワード</label>
-          <input id="adminPassword" name="password" type="password" autocomplete="current-password" required>
-        </div>
-        <button class="button primary" type="submit">ログイン</button>
       </form>
+    </div>
 
-      <section class="panel hidden" id="dashboard">
-        <div class="summary-grid" aria-label="管理サマリー">
-          <div class="summary-item"><strong id="toolTotal">0</strong><span>公開コンテンツ</span></div>
-          <div class="summary-item"><strong id="userTotal">0</strong><span>登録ユーザー</span></div>
-          <div class="summary-item"><strong id="adminTotal">0</strong><span>管理者</span></div>
-          <div class="summary-item"><strong id="announcementTotal">0</strong><span>公開お知らせ</span></div>
+    <!-- ========== ダッシュボード ========== -->
+    <section class="hidden" id="dashboard">
+      <!-- サマリー -->
+      <div class="summary-grid" aria-label="管理サマリー">
+        <div class="summary-item">
+          <strong id="toolTotal">0</strong>
+          <span>公開コンテンツ</span>
         </div>
-        <div class="tabs">
-          <button class="button tab active" type="button" data-view="toolsView">ツール</button>
-          <button class="button tab" type="button" data-view="usersView">ユーザー</button>
-          <button class="button tab" type="button" data-view="announcementsView">お知らせ</button>
+        <div class="summary-item">
+          <strong id="userTotal">0</strong>
+          <span>登録ユーザー</span>
         </div>
+        <div class="summary-item">
+          <strong id="adminTotal">0</strong>
+          <span>管理者</span>
+        </div>
+        <div class="summary-item">
+          <strong id="announcementTotal">0</strong>
+          <span>公開お知らせ</span>
+        </div>
+      </div>
 
-        <div class="view active" id="toolsView">
-          <div class="view-grid">
-            <form class="stack" id="toolForm">
-              <h2>ツール追加・編集</h2>
-              <input type="hidden" id="toolId" name="id">
-              <div class="field">
-                <label for="toolName">名前</label>
-                <input id="toolName" name="name" required>
-              </div>
-              <div class="field">
-                <label for="toolDescription">説明</label>
-                <textarea id="toolDescription" name="description" required></textarea>
-              </div>
-              <div class="field">
-                <label for="toolUrl">URL</label>
-                <input id="toolUrl" name="url" type="url" required>
-              </div>
-              <div class="field">
-                <label for="toolCategory">カテゴリ</label>
-                <select id="toolCategory" name="category">
-                  <option value="tool utility">日常ツール</option>
-                  <option value="tool dev">開発ツール</option>
-                  <option value="game">ゲーム</option>
-                </select>
-              </div>
-              <div class="field">
-                <label for="toolOrder">表示順</label>
-                <input id="toolOrder" name="order" type="number" min="1" value="10">
-              </div>
-              <div class="actions">
-                <button class="button primary" type="submit">保存</button>
-                <button class="button" type="button" id="clearToolForm">新規入力</button>
-              </div>
-            </form>
-            <div>
-              <h3>登録済みツール</h3>
+      <!-- タブナビゲーション -->
+      <div class="tabs">
+        <button class="button tab active" type="button" data-view="toolsView">
+          📦 ツール・ゲーム
+        </button>
+        <button class="button tab" type="button" data-view="usersView">
+          👥 ユーザー管理
+        </button>
+        <button class="button tab" type="button" data-view="announcementsView">
+          📢 お知らせ
+        </button>
+      </div>
+
+      <!-- ツール管理ビュー -->
+      <div class="view active" id="toolsView">
+        <div class="view-grid">
+          <form class="panel stack" id="toolForm">
+            <h3>ツール追加・編集</h3>
+            <input type="hidden" id="toolId" name="id">
+            <div class="field">
+              <label for="toolName">ツール名 *</label>
+              <input id="toolName" name="name" placeholder="例: 文字数カウント" required>
+            </div>
+            <div class="field">
+              <label for="toolDescription">説明 *</label>
+              <textarea id="toolDescription" name="description" placeholder="ツールの説明を入力..." required></textarea>
+            </div>
+            <div class="field">
+              <label for="toolUrl">URL *</label>
+              <input id="toolUrl" name="url" type="url" placeholder="https://example.com" required>
+            </div>
+            <div class="field">
+              <label for="toolCategory">カテゴリ *</label>
+              <select id="toolCategory" name="category" required>
+                <option value="tool utility">日常ツール</option>
+                <option value="tool dev">開発ツール</option>
+                <option value="game">ゲーム</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="toolOrder">表示順 (小さいほど上)</label>
+              <input id="toolOrder" name="order" type="number" min="1" value="10">
+            </div>
+            <div class="actions">
+              <button class="button primary" type="submit" style="flex: 1;">💾 保存</button>
+              <button class="button" type="button" id="clearToolForm">🔄 クリア</button>
+            </div>
+          </form>
+          <div class="panel">
+            <h3>登録済みツール</h3>
+            <div class="table-wrapper">
               <table>
-                <thead><tr><th>名前</th><th>カテゴリ</th><th>状態</th><th>操作</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>ツール名</th>
+                    <th>カテゴリ</th>
+                    <th>状態</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
                 <tbody id="toolsBody"></tbody>
               </table>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="view" id="usersView">
-          <div class="view-grid">
-            <form class="stack" id="userForm">
-              <h2>ユーザー追加</h2>
-              <div class="field">
-                <label for="userName">表示名</label>
-                <input id="userName" name="name" required>
-              </div>
-              <div class="field">
-                <label for="userEmail">メールアドレス</label>
-                <input id="userEmail" name="email" type="email" required>
-              </div>
-              <div class="field">
-                <label for="userPassword">パスワード</label>
-                <input id="userPassword" name="password" type="password" minlength="8" required>
-              </div>
-              <div class="field">
-                <label for="userRole">権限</label>
-                <select id="userRole" name="role">
-                  <option value="user">user</option>
-                  <option value="admin">admin</option>
-                </select>
-              </div>
-              <button class="button primary" type="submit">ユーザーを作成</button>
-            </form>
-            <div>
-              <h3>登録済みユーザー</h3>
+      <!-- ユーザー管理ビュー -->
+      <div class="view" id="usersView">
+        <div class="view-grid">
+          <form class="panel stack" id="userForm">
+            <h3>ユーザー追加</h3>
+            <div class="field">
+              <label for="userName">表示名 *</label>
+              <input id="userName" name="name" placeholder="例: 田中太郎" required>
+            </div>
+            <div class="field">
+              <label for="userEmail">メールアドレス *</label>
+              <input id="userEmail" name="email" type="email" placeholder="user@example.com" required>
+            </div>
+            <div class="field">
+              <label for="userPassword">パスワード (8文字以上) *</label>
+              <input id="userPassword" name="password" type="password" minlength="8" placeholder="••••••••" required>
+            </div>
+            <div class="field">
+              <label for="userRole">権限</label>
+              <select id="userRole" name="role">
+                <option value="user">一般ユーザー</option>
+                <option value="admin">管理者</option>
+              </select>
+            </div>
+            <button class="button primary" type="submit" style="width: 100%;">➕ ユーザーを作成</button>
+          </form>
+          <div class="panel">
+            <h3>登録済みユーザー</h3>
+            <div class="table-wrapper">
               <table>
-                <thead><tr><th>メール</th><th>名前</th><th>権限</th><th>状態</th><th>操作</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>メール</th>
+                    <th>名前</th>
+                    <th>権限</th>
+                    <th>状態</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
                 <tbody id="usersBody"></tbody>
               </table>
             </div>
           </div>
         </div>
+      </div>
 
-        <div class="view" id="announcementsView">
-          <div class="view-grid">
-            <form class="stack" id="announcementForm">
-              <h2>お知らせ追加・編集</h2>
-              <input type="hidden" id="announcementId" name="id">
-              <div class="field">
-                <label for="announcementTitle">タイトル</label>
-                <input id="announcementTitle" name="title" required>
-              </div>
-              <div class="field">
-                <label for="announcementBody">本文</label>
-                <textarea id="announcementBody" name="body" required></textarea>
-              </div>
-              <div class="field">
-                <label for="announcementOrder">表示順</label>
-                <input id="announcementOrder" name="order" type="number" min="1" value="10">
-              </div>
-              <div class="actions">
-                <button class="button primary" type="submit">保存</button>
-                <button class="button" type="button" id="clearAnnouncementForm">新規入力</button>
-              </div>
-            </form>
-            <div>
-              <h3>登録済みお知らせ</h3>
+      <!-- お知らせ管理ビュー -->
+      <div class="view" id="announcementsView">
+        <div class="view-grid">
+          <form class="panel stack" id="announcementForm">
+            <h3>お知らせ追加・編集</h3>
+            <input type="hidden" id="announcementId" name="id">
+            <div class="field">
+              <label for="announcementTitle">タイトル *</label>
+              <input id="announcementTitle" name="title" placeholder="例: 新機能のお知らせ" required>
+            </div>
+            <div class="field">
+              <label for="announcementBody">本文 *</label>
+              <textarea id="announcementBody" name="body" placeholder="お知らせの内容を入力..." required></textarea>
+            </div>
+            <div class="field">
+              <label for="announcementOrder">表示順 (小さいほど上)</label>
+              <input id="announcementOrder" name="order" type="number" min="1" value="10">
+            </div>
+            <div class="actions">
+              <button class="button primary" type="submit" style="flex: 1;">💾 保存</button>
+              <button class="button" type="button" id="clearAnnouncementForm">🔄 クリア</button>
+            </div>
+          </form>
+          <div class="panel">
+            <h3>登録済みお知らせ</h3>
+            <div class="table-wrapper">
               <table>
-                <thead><tr><th>タイトル</th><th>状態</th><th>表示順</th><th>操作</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>タイトル</th>
+                    <th>状態</th>
+                    <th>表示順</th>
+                    <th>操作</th>
+                  </tr>
+                </thead>
                 <tbody id="announcementsBody"></tbody>
               </table>
             </div>
           </div>
         </div>
-      </section>
+      </div>
     </section>
   </main>
 
@@ -341,6 +754,8 @@
     const toast = document.querySelector("#toast");
     const dashboard = document.querySelector("#dashboard");
     const loginPanel = document.querySelector("#loginPanel");
+    const loginContainer = document.querySelector("#loginContainer");
+    const loginHero = document.querySelector("#loginHero");
     const logoutButton = document.querySelector("#logoutButton");
     let users = [];
     let tools = [];
@@ -362,7 +777,12 @@
     }
 
     function slugify(value) {
-      return String(value).trim().toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `tool-${Date.now()}`;
+      return String(value)
+        .trim()
+        .toLowerCase()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-");
     }
 
     function makeId(prefix) {
@@ -391,7 +811,8 @@
       }
 
       sessionStorage.setItem("idsHubAdmin", JSON.stringify({ email, name: user.name || "" }));
-      loginPanel.classList.add("hidden");
+      loginContainer.classList.add("hidden");
+      loginHero.classList.add("hidden");
       dashboard.classList.remove("hidden");
       logoutButton.classList.remove("hidden");
       await loadAll();
@@ -419,14 +840,18 @@
     function renderTools() {
       document.querySelector("#toolsBody").innerHTML = tools.map((tool) => `
         <tr>
-          <td><strong>${escapeHtml(tool.name)}</strong><br><small>${escapeHtml(tool.url)}</small></td>
+          <td>
+            <strong>${escapeHtml(tool.name)}</strong>
+            <br>
+            <span class="text-muted">${escapeHtml(tool.url)}</span>
+          </td>
           <td>${escapeHtml(tool.label || tool.category)}</td>
           <td><span class="status ${tool.enabled === false ? "off" : "on"}">${tool.enabled === false ? "停止" : "公開"}</span></td>
           <td>
             <div class="actions">
-              <button class="button" type="button" data-edit-tool="${escapeHtml(tool.id)}">編集</button>
-              <button class="button" type="button" data-toggle-tool="${escapeHtml(tool.id)}">${tool.enabled === false ? "公開" : "停止"}</button>
-              <button class="button danger" type="button" data-delete-tool="${escapeHtml(tool.id)}">削除</button>
+              <button class="button" type="button" data-edit-tool="${escapeHtml(tool.id)}" title="編集">✏️</button>
+              <button class="button" type="button" data-toggle-tool="${escapeHtml(tool.id)}" title="${tool.enabled === false ? "公開" : "停止"}">${tool.enabled === false ? "🔓" : "🔒"}</button>
+              <button class="button danger" type="button" data-delete-tool="${escapeHtml(tool.id)}" title="削除">🗑️</button>
             </div>
           </td>
         </tr>
@@ -436,20 +861,20 @@
     function renderUsers() {
       document.querySelector("#usersBody").innerHTML = users.map((user) => `
         <tr>
-          <td>${escapeHtml(user.email)}</td>
+          <td><strong>${escapeHtml(user.email)}</strong></td>
           <td>${escapeHtml(user.name)}</td>
           <td>
-            <select data-user-role="${escapeHtml(user.id)}">
-              <option value="user" ${user.role !== "admin" ? "selected" : ""}>user</option>
-              <option value="admin" ${user.role === "admin" ? "selected" : ""}>admin</option>
+            <select data-user-role="${escapeHtml(user.id)}" style="padding: 6px 8px; border-radius: 6px; border: 1px solid var(--line); font-size: 13px;">
+              <option value="user" ${user.role !== "admin" ? "selected" : ""}>一般ユーザー</option>
+              <option value="admin" ${user.role === "admin" ? "selected" : ""}>管理者</option>
             </select>
           </td>
           <td><span class="status ${user.enabled === false ? "off" : "on"}">${user.enabled === false ? "停止" : "有効"}</span></td>
           <td>
             <div class="actions">
-              <button class="button" type="button" data-toggle-user="${escapeHtml(user.id)}">${user.enabled === false ? "有効化" : "停止"}</button>
-              <button class="button" type="button" data-reset-user="${escapeHtml(user.id)}">PW再設定</button>
-              <button class="button danger" type="button" data-delete-user="${escapeHtml(user.id)}">削除</button>
+              <button class="button" type="button" data-toggle-user="${escapeHtml(user.id)}" title="${user.enabled === false ? "有効化" : "停止"}">${user.enabled === false ? "✅" : "⏸️"}</button>
+              <button class="button" type="button" data-reset-user="${escapeHtml(user.id)}" title="パスワード再設定">🔑</button>
+              <button class="button danger" type="button" data-delete-user="${escapeHtml(user.id)}" title="削除">🗑️</button>
             </div>
           </td>
         </tr>
@@ -459,14 +884,18 @@
     function renderAnnouncements() {
       document.querySelector("#announcementsBody").innerHTML = announcements.map((item) => `
         <tr>
-          <td><strong>${escapeHtml(item.title)}</strong><br><small>${escapeHtml(item.body)}</small></td>
+          <td>
+            <strong>${escapeHtml(item.title)}</strong>
+            <br>
+            <span class="text-muted">${escapeHtml(item.body.substring(0, 60))}${item.body.length > 60 ? "..." : ""}</span>
+          </td>
           <td><span class="status ${item.enabled === false ? "off" : "on"}">${item.enabled === false ? "停止" : "公開"}</span></td>
           <td>${escapeHtml(item.order || "")}</td>
           <td>
             <div class="actions">
-              <button class="button" type="button" data-edit-announcement="${escapeHtml(item.id)}">編集</button>
-              <button class="button" type="button" data-toggle-announcement="${escapeHtml(item.id)}">${item.enabled === false ? "公開" : "停止"}</button>
-              <button class="button danger" type="button" data-delete-announcement="${escapeHtml(item.id)}">削除</button>
+              <button class="button" type="button" data-edit-announcement="${escapeHtml(item.id)}" title="編集">✏️</button>
+              <button class="button" type="button" data-toggle-announcement="${escapeHtml(item.id)}" title="${item.enabled === false ? "公開" : "停止"}">${item.enabled === false ? "🔓" : "🔒"}</button>
+              <button class="button danger" type="button" data-delete-announcement="${escapeHtml(item.id)}" title="削除">🗑️</button>
             </div>
           </td>
         </tr>
@@ -477,9 +906,9 @@
       event.preventDefault();
       try {
         await loginAdmin(new FormData(event.currentTarget));
-        showToast("管理者としてログインしました。");
+        showToast("✅ 管理者としてログインしました。");
       } catch (error) {
-        showToast(error.message || "ログインに失敗しました。");
+        showToast("❌ " + (error.message || "ログインに失敗しました。"));
       }
     });
 
@@ -507,7 +936,7 @@
       event.currentTarget.reset();
       document.querySelector("#toolId").value = "";
       await loadAll();
-      showToast("ツールを保存しました。");
+      showToast("✅ ツールを保存しました。");
     });
 
     document.querySelector("#userForm").addEventListener("submit", async (event) => {
@@ -516,7 +945,7 @@
       const email = normalizeEmail(formData.get("email"));
       const password = String(formData.get("password") || "");
       if (password.length < 8) {
-        showToast("パスワードは8文字以上で入力してください。");
+        showToast("❌ パスワードは8文字以上で入力してください。");
         return;
       }
 
@@ -532,7 +961,7 @@
 
       event.currentTarget.reset();
       await loadAll();
-      showToast("ユーザーを作成しました。");
+      showToast("✅ ユーザーを作成しました。");
     });
 
     document.querySelector("#announcementForm").addEventListener("submit", async (event) => {
@@ -552,7 +981,7 @@
       event.currentTarget.reset();
       document.querySelector("#announcementId").value = "";
       await loadAll();
-      showToast("お知らせを保存しました。");
+      showToast("✅ お知らせを保存しました。");
     });
 
     document.addEventListener("click", async (event) => {
@@ -574,6 +1003,7 @@
         document.querySelector("#toolUrl").value = tool.url || "";
         document.querySelector("#toolCategory").value = tool.category || "tool utility";
         document.querySelector("#toolOrder").value = tool.order || 10;
+        document.querySelector("#toolForm").scrollIntoView({ behavior: "smooth" });
       }
 
       if (toggleToolId) {
@@ -585,6 +1015,7 @@
       if (deleteToolId && confirm("このツールを削除しますか？")) {
         await deleteDoc(doc(db, "tools", deleteToolId));
         await loadAll();
+        showToast("✅ ツールを削除しました。");
       }
 
       if (toggleUserId) {
@@ -597,13 +1028,14 @@
         const password = prompt("新しいパスワードを8文字以上で入力してください。");
         if (password && password.length >= 8) {
           await updateDoc(doc(db, "users", resetUserId), { passwordBase64: toBase64(password), updatedAt: serverTimestamp() });
-          showToast("パスワードを更新しました。");
+          showToast("✅ パスワードを更新しました。");
         }
       }
 
       if (deleteUserId && confirm("このユーザーを削除しますか？")) {
         await deleteDoc(doc(db, "users", deleteUserId));
         await loadAll();
+        showToast("✅ ユーザーを削除しました。");
       }
 
       if (editAnnouncementId) {
@@ -612,6 +1044,7 @@
         document.querySelector("#announcementTitle").value = item.title || "";
         document.querySelector("#announcementBody").value = item.body || "";
         document.querySelector("#announcementOrder").value = item.order || 10;
+        document.querySelector("#announcementForm").scrollIntoView({ behavior: "smooth" });
       }
 
       if (toggleAnnouncementId) {
@@ -623,6 +1056,7 @@
       if (deleteAnnouncementId && confirm("このお知らせを削除しますか？")) {
         await deleteDoc(doc(db, "announcements", deleteAnnouncementId));
         await loadAll();
+        showToast("✅ お知らせを削除しました。");
       }
     });
 
@@ -631,7 +1065,7 @@
       if (userId) {
         await updateDoc(doc(db, "users", userId), { role: event.target.value, updatedAt: serverTimestamp() });
         await loadAll();
-        showToast("権限を更新しました。");
+        showToast("✅ 権限を更新しました。");
       }
     });
 
@@ -658,7 +1092,8 @@
     });
 
     if (sessionStorage.getItem("idsHubAdmin")) {
-      loginPanel.classList.add("hidden");
+      loginContainer.classList.add("hidden");
+      loginHero.classList.add("hidden");
       dashboard.classList.remove("hidden");
       logoutButton.classList.remove("hidden");
       loadAll();
