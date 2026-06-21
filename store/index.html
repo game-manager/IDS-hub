@@ -7,16 +7,20 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #ffffff;
-      --soft: #f5f8fc;
-      --ink: #102033;
-      --muted: #66758a;
-      --line: #dde7f2;
-      --brand: #0969da;
-      --brand-dark: #064ea4;
-      --brand-soft: #eaf3ff;
+      --bg: #f6faff;
       --panel: #ffffff;
-      --shadow: 0 10px 28px rgba(17, 39, 70, .08);
+      --panel-soft: #f3f7ff;
+      --ink: #061653;
+      --text: #182b55;
+      --muted: #657596;
+      --line: #d8e5f8;
+      --brand: #0b5be7;
+      --brand-strong: #0544c7;
+      --brand-soft: #eaf2ff;
+      --green: #12bf8a;
+      --purple: #6a42f3;
+      --orange: #ff9e17;
+      --shadow: 0 18px 48px rgba(8, 47, 119, .12);
       --radius: 8px;
       font-family: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
     }
@@ -28,32 +32,104 @@
     body {
       margin: 0;
       min-height: 100vh;
-      background: var(--bg);
-      color: var(--ink);
+      background:
+        radial-gradient(circle at -2% -8%, rgba(11, 91, 231, .13), transparent 25%),
+        radial-gradient(circle at 94% 9%, rgba(11, 91, 231, .08), transparent 18%),
+        linear-gradient(180deg, #ffffff 0%, var(--bg) 54%, #ffffff 100%);
+      color: var(--text);
+    }
+
+    body::after {
+      content: "";
+      position: fixed;
+      top: 42px;
+      right: 34px;
+      width: 150px;
+      height: 96px;
+      pointer-events: none;
+      opacity: .45;
+      background-image: radial-gradient(circle, #9fc2ff 1.2px, transparent 1.2px);
+      background-size: 12px 12px;
+      mask-image: linear-gradient(90deg, transparent, #000 30%, #000 80%, transparent);
     }
 
     a { color: inherit; }
     button, input { font: inherit; }
     button { cursor: pointer; }
 
-    .store-header {
-      position: sticky;
-      top: 0;
-      z-index: 20;
-      border-bottom: 1px solid var(--line);
-      background: rgba(255, 255, 255, .94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
+    .page {
+      width: min(100%, 1380px);
+      margin: 0 auto;
+      padding: 18px clamp(14px, 3vw, 32px) 0;
     }
 
-    .header-inner {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 14px 24px;
-      display: grid;
-      grid-template-columns: auto 1fr minmax(220px, 320px) auto;
+    .top-logo {
+      display: flex;
+      justify-content: center;
+      padding: 2px 0 4px;
+    }
+
+    .top-logo img {
+      width: clamp(168px, 19vw, 260px);
+      height: auto;
+      display: block;
+    }
+
+    .headline {
+      text-align: center;
+      margin: 0 auto 22px;
+    }
+
+    .headline h1 {
+      margin: 8px 0 8px;
+      color: var(--ink);
+      font-size: clamp(30px, 4.8vw, 58px);
+      line-height: 1.1;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .headline p {
+      margin: 0;
+      color: var(--text);
+      font-size: clamp(14px, 1.45vw, 18px);
+      font-weight: 700;
+      line-height: 1.7;
+    }
+
+    .store-shell {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .browser-bar {
+      height: 26px;
+      display: flex;
       align-items: center;
-      gap: 20px;
+      gap: 6px;
+      padding: 0 14px;
+      border-bottom: 1px solid var(--line);
+      background: #f8fbff;
+    }
+
+    .browser-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #c5d2e6;
+    }
+
+    .store-header {
+      display: grid;
+      grid-template-columns: auto 1fr minmax(190px, 270px) auto;
+      align-items: center;
+      gap: 18px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--line);
+      background: var(--panel);
     }
 
     .brand {
@@ -63,7 +139,7 @@
     }
 
     .brand img {
-      width: 150px;
+      width: 118px;
       height: auto;
       display: block;
     }
@@ -72,37 +148,40 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 6px;
+      gap: 4px;
+      min-width: 0;
     }
 
     .nav a,
     .mobile-panel a {
-      min-height: 38px;
+      min-height: 34px;
       display: inline-flex;
       align-items: center;
-      padding: 0 12px;
-      border-radius: var(--radius);
-      color: var(--muted);
-      font-size: 14px;
-      font-weight: 700;
+      padding: 0 11px;
+      border-bottom: 2px solid transparent;
+      border-radius: 0;
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
       text-decoration: none;
+      white-space: nowrap;
     }
 
     .nav a:hover,
-    .mobile-panel a:hover {
-      background: var(--brand-soft);
+    .nav a.active {
       color: var(--brand);
+      border-bottom-color: var(--brand);
     }
 
     .search {
-      min-height: 42px;
+      min-height: 36px;
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 0 14px;
+      padding: 0 12px;
       border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--soft);
+      border-radius: 6px;
+      background: #f8fbff;
       color: var(--muted);
     }
 
@@ -112,36 +191,45 @@
       outline: 0;
       background: transparent;
       color: var(--ink);
-      font-size: 14px;
+      font-size: 13px;
     }
 
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .icon-button,
     .menu-button {
-      display: none;
-      width: 42px;
-      height: 42px;
+      width: 36px;
+      height: 36px;
       border: 1px solid var(--line);
-      border-radius: var(--radius);
+      border-radius: 6px;
       background: var(--panel);
-      color: var(--ink);
+      color: var(--brand);
+      display: grid;
       place-items: center;
     }
 
+    .menu-button { display: none; }
+
     .mobile-panel {
       display: none;
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 0 24px 16px;
       grid-template-columns: 1fr;
-      gap: 8px;
+      gap: 6px;
+      padding: 0 18px 16px;
+      background: var(--panel);
+      border-bottom: 1px solid var(--line);
     }
 
     .mobile-panel.open { display: grid; }
 
     .mobile-panel a {
+      min-height: 42px;
       border: 1px solid var(--line);
-      background: var(--panel);
+      border-radius: 6px;
       justify-content: flex-start;
-      min-height: 44px;
     }
 
     .icon {
@@ -156,264 +244,309 @@
     }
 
     main {
-      max-width: 1180px;
-      margin: 0 auto;
-      padding: 44px 24px 64px;
+      padding: 24px;
+      background: linear-gradient(180deg, #ffffff 0%, #f9fbff 100%);
     }
 
     .hero {
       display: grid;
-      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
-      gap: 36px;
-      align-items: center;
-      padding: 42px 0 34px;
+      grid-template-columns: minmax(0, 1fr) 300px;
+      gap: 26px;
+      align-items: stretch;
+      min-height: 210px;
+      padding: 24px 26px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background:
+        linear-gradient(90deg, rgba(255, 255, 255, .98) 0%, rgba(248, 251, 255, .94) 58%, rgba(234, 242, 255, .95) 100%);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      right: 36px;
+      top: 22px;
+      width: 150px;
+      height: 120px;
+      opacity: .58;
+      background-image: radial-gradient(circle, #89b6ff 1.1px, transparent 1.1px);
+      background-size: 11px 11px;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      align-content: center;
     }
 
     .eyebrow {
       display: inline-flex;
+      width: fit-content;
       align-items: center;
-      min-height: 28px;
-      padding: 0 12px;
-      border-radius: 999px;
-      background: var(--brand-soft);
-      color: var(--brand);
-      font-size: 13px;
-      font-weight: 800;
-    }
-
-    h1 {
-      margin: 18px 0 16px;
-      max-width: 660px;
-      font-size: clamp(34px, 5vw, 58px);
-      line-height: 1.08;
-      letter-spacing: 0;
-    }
-
-    .hero-copy {
-      max-width: 590px;
-      margin: 0;
-      color: var(--muted);
-      font-size: 17px;
-      line-height: 1.9;
-    }
-
-    .feature-pills {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 26px;
-    }
-
-    .feature-pills span {
-      display: inline-flex;
-      align-items: center;
-      min-height: 38px;
-      padding: 0 14px;
-      border: 1px solid var(--line);
-      border-radius: 999px;
-      background: var(--panel);
-      color: var(--ink);
-      font-size: 14px;
-      font-weight: 800;
-    }
-
-    .hero-board {
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
-      box-shadow: var(--shadow);
-      padding: 18px;
-    }
-
-    .hero-board-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--line);
-    }
-
-    .hero-board-head strong { font-size: 15px; }
-    .hero-board-head span { color: var(--muted); font-size: 13px; font-weight: 700; }
-
-    .mini-list {
-      display: grid;
-      gap: 12px;
-      padding-top: 14px;
-    }
-
-    .mini-app {
-      display: grid;
-      grid-template-columns: 52px 1fr auto;
-      gap: 12px;
-      align-items: center;
-      padding: 12px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-    }
-
-    .app-icon {
-      width: 52px;
-      height: 52px;
-      border-radius: 14px;
-      display: grid;
-      place-items: center;
-      color: #fff;
-      font-size: 20px;
-      font-weight: 900;
-      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, .12);
-    }
-
-    .icon-memo { background: linear-gradient(135deg, #0969da, #55a7ff); }
-    .icon-tesnavi { background: linear-gradient(135deg, #0f7b73, #44c7b8); }
-    .icon-timer { background: linear-gradient(135deg, #6254d9, #8fa0ff); }
-    .icon-task { background: linear-gradient(135deg, #d97706, #ffc35a); }
-
-    .mini-app h3 {
-      margin: 0 0 4px;
-      font-size: 15px;
-    }
-
-    .mini-app p {
-      margin: 0;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .rating {
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-      color: #995c00;
-      font-size: 13px;
-      font-weight: 800;
-      white-space: nowrap;
-    }
-
-    .section {
-      padding: 34px 0;
-      scroll-margin-top: 90px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: end;
-      gap: 18px;
-      margin-bottom: 18px;
-    }
-
-    .section-head h2 {
-      margin: 0 0 8px;
-      font-size: 26px;
-      letter-spacing: 0;
-    }
-
-    .section-head p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.8;
-    }
-
-    .app-grid {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 18px;
-    }
-
-    .app-card {
-      display: grid;
-      gap: 16px;
-      padding: 18px;
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-      background: var(--panel);
-      box-shadow: 0 8px 22px rgba(17, 39, 70, .05);
-    }
-
-    .app-card-top {
-      display: flex;
-      gap: 13px;
-      align-items: flex-start;
-    }
-
-    .app-card h3 {
-      margin: 2px 0 6px;
-      font-size: 19px;
-    }
-
-    .app-card p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 14px;
-    }
-
-    .tags {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-
-    .tag {
-      display: inline-flex;
-      align-items: center;
+      gap: 7px;
       min-height: 28px;
       padding: 0 10px;
       border-radius: 999px;
       background: var(--brand-soft);
       color: var(--brand);
       font-size: 12px;
-      font-weight: 800;
+      font-weight: 900;
+    }
+
+    h2,
+    h3,
+    p { overflow-wrap: anywhere; }
+
+    .hero h2 {
+      margin: 12px 0 10px;
+      color: var(--ink);
+      font-size: clamp(26px, 3.2vw, 42px);
+      line-height: 1.15;
+      letter-spacing: 0;
+      font-weight: 900;
+    }
+
+    .hero-copy {
+      max-width: 560px;
+      margin: 0;
+      color: var(--text);
+      font-size: 15px;
+      line-height: 1.8;
+      font-weight: 700;
+    }
+
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 9px;
+      margin-top: 18px;
+    }
+
+    .feature-pills span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 900;
+    }
+
+    .hero-visual {
+      position: relative;
+      z-index: 1;
+      min-height: 170px;
+    }
+
+    .floating-card {
+      position: absolute;
+      display: grid;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: 0 14px 30px rgba(8, 47, 119, .12);
+    }
+
+    .floating-card.large {
+      width: 94px;
+      height: 94px;
+      top: 32px;
+      left: 92px;
+    }
+
+    .floating-card.small-left {
+      width: 50px;
+      height: 50px;
+      bottom: 26px;
+      left: 32px;
+    }
+
+    .floating-card.small-right {
+      width: 58px;
+      height: 58px;
+      right: 18px;
+      bottom: 34px;
+    }
+
+    .app-icon {
+      width: 54px;
+      height: 54px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      color: #fff;
+      font-size: 19px;
+      font-weight: 900;
+      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, .13);
+    }
+
+    .app-icon.small {
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
+      font-size: 14px;
+    }
+
+    .icon-memo { background: linear-gradient(135deg, #10c78f, #09a86f); }
+    .icon-tesnavi { background: linear-gradient(135deg, #0b78e7, #2ba7ff); }
+    .icon-timer { background: linear-gradient(135deg, #5c2df0, #7b78ff); }
+    .icon-task { background: linear-gradient(135deg, #ff9800, #ffc14d); }
+    .icon-idea { background: linear-gradient(135deg, #7447f4, #9a7cff); }
+    .icon-calendar { background: linear-gradient(135deg, #0b5be7, #55a0ff); }
+
+    .section {
+      padding-top: 26px;
+      scroll-margin-top: 110px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 12px;
+    }
+
+    .section-head h2 {
+      margin: 0;
+      color: var(--ink);
+      font-size: 20px;
+      letter-spacing: 0;
+    }
+
+    .section-head a {
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 900;
+      text-decoration: none;
+      white-space: nowrap;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .app-card {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto auto;
+      gap: 10px 12px;
+      padding: 16px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 10px 22px rgba(8, 47, 119, .06);
+      min-width: 0;
+    }
+
+    .app-card .app-icon {
+      grid-row: 1 / span 3;
+      width: 58px;
+      height: 58px;
+    }
+
+    .app-card h3 {
+      margin: 0 0 5px;
+      color: var(--ink);
+      font-size: 17px;
+      line-height: 1.3;
+    }
+
+    .app-card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.55;
+      font-weight: 700;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 24px;
+      padding: 0 8px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 11px;
+      font-weight: 900;
+    }
+
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: #9b6500;
+      font-size: 12px;
+      font-weight: 900;
+      white-space: nowrap;
+    }
+
+    .rating .stars {
+      color: #10b981;
+      letter-spacing: 1px;
     }
 
     .card-actions {
+      grid-column: 1 / -1;
       display: flex;
-      gap: 10px;
+      gap: 8px;
       flex-wrap: wrap;
-      align-items: center;
+      padding-top: 4px;
     }
 
     .button {
-      min-height: 40px;
+      min-height: 36px;
       display: inline-flex;
       align-items: center;
       justify-content: center;
       gap: 7px;
-      padding: 0 14px;
-      border-radius: var(--radius);
+      padding: 0 12px;
+      border-radius: 6px;
       border: 1px solid transparent;
       text-decoration: none;
-      font-size: 14px;
-      font-weight: 800;
+      font-size: 13px;
+      font-weight: 900;
     }
 
     .button.primary {
       background: var(--brand);
       color: #fff;
-      box-shadow: 0 8px 18px rgba(9, 105, 218, .18);
+      box-shadow: 0 8px 18px rgba(11, 91, 231, .18);
     }
 
-    .button.primary:hover { background: var(--brand-dark); }
+    .button.primary:hover { background: var(--brand-strong); }
 
     .button.secondary {
       background: var(--panel);
       border-color: var(--line);
-      color: var(--ink);
+      color: var(--brand);
     }
 
     .button.secondary:disabled {
       color: var(--muted);
-      background: var(--soft);
+      background: #f8fbff;
       cursor: not-allowed;
     }
 
     .store-columns {
       display: grid;
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      grid-template-columns: minmax(0, 1.3fr) minmax(300px, .95fr);
       gap: 18px;
       align-items: start;
     }
@@ -423,12 +556,14 @@
       border-radius: var(--radius);
       background: var(--panel);
       overflow: hidden;
+      box-shadow: 0 10px 22px rgba(8, 47, 119, .05);
     }
 
     .list-panel h2 {
       margin: 0;
-      padding: 18px 18px 12px;
-      font-size: 22px;
+      padding: 16px 18px 10px;
+      color: var(--ink);
+      font-size: 19px;
     }
 
     .store-list {
@@ -438,25 +573,30 @@
     }
 
     .store-list li {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
       align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      min-height: 66px;
-      padding: 14px 18px;
+      gap: 12px;
+      min-height: 68px;
+      padding: 12px 18px;
       border-top: 1px solid var(--line);
     }
 
     .store-list strong {
       display: block;
       margin-bottom: 3px;
+      color: var(--ink);
+      font-size: 14px;
     }
 
     .store-list span {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
       line-height: 1.5;
+      font-weight: 700;
     }
+
+    .store-list .rating { justify-self: end; }
 
     .category-row {
       display: grid;
@@ -465,272 +605,380 @@
     }
 
     .category-card {
+      display: grid;
+      gap: 8px;
+      min-height: 106px;
+      padding: 16px;
       border: 1px solid var(--line);
       border-radius: var(--radius);
-      background: var(--soft);
-      padding: 16px;
+      background: var(--panel);
+      box-shadow: 0 10px 22px rgba(8, 47, 119, .05);
     }
 
     .category-card strong {
-      display: block;
-      margin-bottom: 6px;
+      color: var(--ink);
+      font-size: 15px;
     }
 
     .category-card span {
       color: var(--muted);
-      font-size: 13px;
+      font-size: 12px;
+      line-height: 1.6;
+      font-weight: 700;
+    }
+
+    .feature-strip {
+      margin: 28px 0 10px;
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(255, 255, 255, .92);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    .feature-item {
+      display: grid;
+      grid-template-columns: 58px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 18px;
+      min-width: 0;
+    }
+
+    .feature-item + .feature-item {
+      border-left: 1px solid var(--line);
+    }
+
+    .feature-icon {
+      width: 58px;
+      height: 58px;
+      display: grid;
+      place-items: center;
+      border-radius: 50%;
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .feature-item strong {
+      display: block;
+      margin-bottom: 5px;
+      color: var(--brand);
+      font-size: 14px;
+      line-height: 1.35;
+    }
+
+    .feature-item span {
+      color: var(--text);
+      font-size: 12px;
+      line-height: 1.55;
+      font-weight: 700;
     }
 
     .hidden { display: none !important; }
 
     footer {
-      border-top: 1px solid var(--line);
-      padding: 24px;
+      margin-top: 18px;
+      padding: 16px 24px;
+      border-radius: 12px 12px 0 0;
+      background: linear-gradient(90deg, #0d75f2, #0037b8);
+      color: #fff;
       text-align: center;
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.8;
+      font-size: 15px;
+      line-height: 1.7;
+      font-weight: 900;
+      box-shadow: 0 -10px 28px rgba(11, 91, 231, .16);
     }
 
     footer a {
-      color: var(--brand);
-      font-weight: 800;
-      text-decoration: none;
+      color: #fff;
+      text-decoration: underline;
+      text-underline-offset: 3px;
     }
 
-    @media (max-width: 960px) {
-      .header-inner {
+    @media (max-width: 1100px) {
+      .store-header {
         grid-template-columns: auto 1fr auto;
-        gap: 14px;
       }
 
       .nav { display: none; }
       .menu-button { display: grid; }
       .search { grid-column: 1 / -1; }
-      .hero { grid-template-columns: 1fr; padding-top: 26px; }
-      .app-grid { grid-template-columns: 1fr; }
-      .store-columns { grid-template-columns: 1fr; }
-      .category-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .hero { grid-template-columns: 1fr; }
+      .hero-visual { display: none; }
+      .feature-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .feature-item + .feature-item { border-left: 0; border-top: 1px solid var(--line); }
+      .feature-item:nth-child(2) { border-top: 0; }
+      .feature-item:nth-child(even) { border-left: 1px solid var(--line); }
+    }
+
+    @media (max-width: 860px) {
+      .app-grid,
+      .store-columns,
+      .category-row {
+        grid-template-columns: 1fr;
+      }
+
+      .headline h1 { font-size: 30px; }
+      .store-shell { border-radius: 10px; }
+      main { padding: 18px; }
     }
 
     @media (max-width: 620px) {
-      .header-inner { padding: 12px 16px; }
-      .brand img { width: 132px; }
-      main { padding: 28px 16px 46px; }
-      h1 { font-size: 34px; }
-      .section { padding: 26px 0; }
-      .section-head { align-items: stretch; flex-direction: column; }
-      .hero-board { padding: 12px; }
-      .mini-app { grid-template-columns: 46px 1fr; }
-      .mini-app .rating { grid-column: 2; }
-      .app-card-top { align-items: center; }
-      .card-actions .button { flex: 1 1 150px; }
-      .category-row { grid-template-columns: 1fr; }
-      .store-list li { align-items: flex-start; flex-direction: column; }
+      .page { padding: 12px 10px 0; }
+      .headline { margin-bottom: 14px; }
+      .headline h1 { font-size: 25px; }
+      .headline p { font-size: 13px; }
+      .store-header { padding: 12px; gap: 10px; }
+      .brand img { width: 106px; }
+      .hero { padding: 18px; }
+      .hero h2 { font-size: 26px; }
+      .section-head { align-items: flex-start; flex-direction: column; }
+      .app-card { grid-template-columns: 1fr; }
+      .app-card .app-icon { grid-row: auto; }
+      .card-actions .button { flex: 1 1 135px; }
+      .store-list li { grid-template-columns: auto 1fr; }
+      .store-list .rating,
+      .store-list .tag { grid-column: 2; justify-self: start; }
+      .feature-strip { grid-template-columns: 1fr; }
+      .feature-item,
+      .feature-item:nth-child(even) {
+        border-left: 0;
+        border-top: 1px solid var(--line);
+      }
+      .feature-item:first-child { border-top: 0; }
     }
   </style>
 </head>
 <body>
-  <header class="store-header">
-    <div class="header-inner">
-      <a class="brand" href="./" aria-label="IDS Store ホーム">
-        <img src="../assets/ids-store-logo.svg" alt="IDS Store">
-      </a>
+  <div class="page">
+    <div class="top-logo">
+      <img src="../assets/ids-store-logo.svg" alt="IDS Store">
+    </div>
 
-      <nav class="nav" aria-label="メインナビゲーション">
+    <section class="headline" aria-label="IDS Storeの概要">
+      <h1>IDS Store</h1>
+      <p>アプリの検索から起動まで、見やすく整理したIDSのアプリストア。</p>
+    </section>
+
+    <div class="store-shell">
+      <div class="browser-bar" aria-hidden="true">
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+        <span class="browser-dot"></span>
+      </div>
+
+      <header class="store-header">
+        <a class="brand" href="./" aria-label="IDS Store ホーム">
+          <img src="../assets/ids-store-logo.svg" alt="IDS Store">
+        </a>
+
+        <nav class="nav" aria-label="メインナビゲーション">
+          <a class="active" href="../index.html">ホーム</a>
+          <a href="#featured">アプリ一覧</a>
+          <a href="#categories">カテゴリ</a>
+          <a href="#updates">お知らせ</a>
+        </nav>
+
+        <label class="search" aria-label="アプリ検索">
+          <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+          <input id="storeSearch" type="search" placeholder="アプリを検索" autocomplete="off">
+        </label>
+
+        <div class="header-actions">
+          <button class="icon-button" type="button" aria-label="お知らせ">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 7h18s-3 0-3-7"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+          </button>
+          <button class="menu-button" type="button" id="menuButton" aria-label="メニューを開く" aria-expanded="false">
+            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+          </button>
+        </div>
+      </header>
+
+      <nav class="mobile-panel" id="mobilePanel" aria-label="スマホナビゲーション">
         <a href="../index.html">ホーム</a>
         <a href="#featured">アプリ一覧</a>
         <a href="#categories">カテゴリ</a>
         <a href="#updates">お知らせ</a>
       </nav>
 
-      <label class="search" aria-label="アプリ検索">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
-        <input id="storeSearch" type="search" placeholder="アプリを検索" autocomplete="off">
-      </label>
+      <main>
+        <section class="hero">
+          <div class="hero-content">
+            <span class="eyebrow">IDS Store</span>
+            <h2>すぐ使えるアプリを、すぐ開く</h2>
+            <p class="hero-copy">IDSが作成した便利なアプリを、見やすくまとめて公開しています。</p>
+            <div class="feature-pills" aria-label="IDS Storeの特徴">
+              <span>探しやすい</span>
+              <span>見やすい</span>
+              <span>すぐ開ける</span>
+            </div>
+          </div>
 
-      <button class="menu-button" type="button" id="menuButton" aria-label="メニューを開く" aria-expanded="false">
-        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
-      </button>
+          <div class="hero-visual" aria-hidden="true">
+            <div class="floating-card large"><div class="app-icon icon-memo">整</div></div>
+            <div class="floating-card small-left"><div class="app-icon small icon-tesnavi">テ</div></div>
+            <div class="floating-card small-right"><div class="app-icon small icon-timer">ST</div></div>
+          </div>
+        </section>
+
+        <section class="section" id="featured">
+          <div class="section-head">
+            <h2>注目のアプリ</h2>
+            <a href="#featured">すべて見る</a>
+          </div>
+
+          <div class="app-grid" id="appGrid">
+            <article class="app-card" data-search="整理メモ 生産性 メモ シンプルで使いやすいメモアプリ">
+              <div class="app-icon icon-memo" aria-hidden="true">整</div>
+              <div>
+                <h3>整理メモ</h3>
+                <p>シンプルで使いやすいメモアプリ</p>
+              </div>
+              <div class="tags">
+                <span class="tag">生産性</span>
+                <span class="tag">メモ</span>
+              </div>
+              <span class="rating"><span class="stars">★★★★★</span> 4.7（124件）</span>
+              <div class="card-actions">
+                <a class="button primary" href="#">アプリを開く</a>
+                <button class="button secondary" type="button" disabled>詳細</button>
+              </div>
+            </article>
+
+            <article class="app-card" data-search="テスナビ 学習 計画 テスト計画を作りやすくする学習アプリ">
+              <div class="app-icon icon-tesnavi" aria-hidden="true">テ</div>
+              <div>
+                <h3>テスナビ</h3>
+                <p>テスト計画を作りやすくする学習アプリ</p>
+              </div>
+              <div class="tags">
+                <span class="tag">学習</span>
+                <span class="tag">計画</span>
+              </div>
+              <span class="rating"><span class="stars">★★★★☆</span> 4.6（85件）</span>
+              <div class="card-actions">
+                <a class="button primary" href="#">アプリを開く</a>
+                <button class="button secondary" type="button" disabled>詳細</button>
+              </div>
+            </article>
+
+            <article class="app-card" data-search="Study Timer 学習 生産性 集中時間を可視化して学習をサポートするタイマー">
+              <div class="app-icon icon-timer" aria-hidden="true">ST</div>
+              <div>
+                <h3>Study Timer</h3>
+                <p>集中時間を可視化して学習をサポートするタイマー</p>
+              </div>
+              <div class="tags">
+                <span class="tag">学習</span>
+                <span class="tag">生産性</span>
+              </div>
+              <span class="rating"><span class="stars">★★★★☆</span> 4.5（121件）</span>
+              <div class="card-actions">
+                <a class="button primary" href="#">アプリを開く</a>
+                <button class="button secondary" type="button" disabled>詳細</button>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section class="section store-columns">
+          <div class="list-panel">
+            <h2>おすすめのアプリ</h2>
+            <ul class="store-list">
+              <li data-search="スケジュールビュー 計画 カレンダー">
+                <div class="app-icon small icon-calendar" aria-hidden="true">予</div>
+                <div><strong>スケジュールビュー</strong><span>予定を見やすく並べて確認できます。</span></div>
+                <span class="rating">★ 4.3</span>
+              </li>
+              <li data-search="アイデアノート メモ アイデア">
+                <div class="app-icon small icon-idea" aria-hidden="true">案</div>
+                <div><strong>アイデアノート</strong><span>考えをすばやく整理できます。</span></div>
+                <span class="rating">★ 4.1</span>
+              </li>
+              <li data-search="タスクデッキ 生産性 タスク">
+                <div class="app-icon small icon-task" aria-hidden="true">✓</div>
+                <div><strong>タスクデッキ</strong><span>カード形式でタスクを管理できます。</span></div>
+                <span class="rating">★ 4.4</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="list-panel" id="updates">
+            <h2>最近の更新</h2>
+            <ul class="store-list">
+              <li>
+                <div class="app-icon small icon-memo" aria-hidden="true">整</div>
+                <div><strong>整理メモ v1.3.0</strong><span>テンプレート機能を追加しました</span></div>
+                <span class="tag">更新</span>
+              </li>
+              <li>
+                <div class="app-icon small icon-tesnavi" aria-hidden="true">テ</div>
+                <div><strong>テスナビ v1.2.0</strong><span>進捗グラフに対応しました</span></div>
+                <span class="tag">更新</span>
+              </li>
+              <li>
+                <div class="app-icon small icon-timer" aria-hidden="true">ST</div>
+                <div><strong>Study Timer v1.1.0</strong><span>通知音のカスタマイズ機能を追加しました</span></div>
+                <span class="tag">更新</span>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <section class="section" id="categories">
+          <div class="section-head">
+            <h2>カテゴリ</h2>
+            <a href="#categories">目的で探す</a>
+          </div>
+          <div class="category-row">
+            <div class="category-card"><strong>生産性</strong><span>メモ、タスク、整理に役立つアプリ</span></div>
+            <div class="category-card"><strong>学習</strong><span>計画、集中、振り返りを支えるアプリ</span></div>
+            <div class="category-card"><strong>メモ</strong><span>思いついたことを残しやすいアプリ</span></div>
+            <div class="category-card"><strong>計画</strong><span>予定や進め方を整えるアプリ</span></div>
+          </div>
+        </section>
+      </main>
     </div>
 
-    <nav class="mobile-panel" id="mobilePanel" aria-label="スマホナビゲーション">
-      <a href="../index.html">ホーム</a>
-      <a href="#featured">アプリ一覧</a>
-      <a href="#categories">カテゴリ</a>
-      <a href="#updates">お知らせ</a>
-    </nav>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div>
-        <span class="eyebrow">IDS Store</span>
-        <h1>すぐ使えるアプリを、すぐ開く</h1>
-        <p class="hero-copy">IDSが作成した便利なアプリを、見やすくまとめて公開しています。</p>
-        <div class="feature-pills" aria-label="IDS Storeの特徴">
-          <span>探しやすい</span>
-          <span>見やすい</span>
-          <span>すぐ開ける</span>
-        </div>
+    <section class="feature-strip" aria-label="IDS Storeの使いやすさ">
+      <div class="feature-item">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg></div>
+        <div><strong>アプリが探しやすい</strong><span>カテゴリや検索で目的のアプリにすぐたどり着けます。</span></div>
       </div>
-
-      <aside class="hero-board" aria-label="注目アプリの概要">
-        <div class="hero-board-head">
-          <strong>注目のアプリ</strong>
-          <span>評価順</span>
-        </div>
-        <div class="mini-list">
-          <article class="mini-app">
-            <div class="app-icon icon-memo" aria-hidden="true">整</div>
-            <div>
-              <h3>整理メモ</h3>
-              <p>シンプルで使いやすいメモアプリ</p>
-            </div>
-            <span class="rating">★ 4.7</span>
-          </article>
-          <article class="mini-app">
-            <div class="app-icon icon-tesnavi" aria-hidden="true">テ</div>
-            <div>
-              <h3>テスナビ</h3>
-              <p>テスト計画を作りやすくする学習アプリ</p>
-            </div>
-            <span class="rating">★ 4.6</span>
-          </article>
-          <article class="mini-app">
-            <div class="app-icon icon-timer" aria-hidden="true">ST</div>
-            <div>
-              <h3>Study Timer</h3>
-              <p>集中時間を可視化して学習をサポートするタイマー</p>
-            </div>
-            <span class="rating">★ 4.5</span>
-          </article>
-        </div>
-      </aside>
-    </section>
-
-    <section class="section" id="featured">
-      <div class="section-head">
-        <div>
-          <h2>注目のアプリ</h2>
-          <p>よく使うアプリをカードで見やすく整理しています。</p>
-        </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><path d="M14 2v6h6"></path><path d="M8 13h8"></path><path d="M8 17h5"></path></svg></div>
+        <div><strong>内容がすぐわかる</strong><span>説明、カテゴリ、評価をコンパクトに確認できます。</span></div>
       </div>
-
-      <div class="app-grid" id="appGrid">
-        <article class="app-card" data-search="整理メモ 生産性 メモ シンプルで使いやすいメモアプリ">
-          <div class="app-card-top">
-            <div class="app-icon icon-memo" aria-hidden="true">整</div>
-            <div>
-              <h3>整理メモ</h3>
-              <p>シンプルで使いやすいメモアプリ</p>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">生産性</span>
-            <span class="tag">メモ</span>
-          </div>
-          <span class="rating">★ 4.7</span>
-          <div class="card-actions">
-            <a class="button primary" href="#">アプリを開く</a>
-            <button class="button secondary" type="button" disabled>詳細</button>
-          </div>
-        </article>
-
-        <article class="app-card" data-search="テスナビ 学習 計画 テスト計画を作りやすくする学習アプリ">
-          <div class="app-card-top">
-            <div class="app-icon icon-tesnavi" aria-hidden="true">テ</div>
-            <div>
-              <h3>テスナビ</h3>
-              <p>テスト計画を作りやすくする学習アプリ</p>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">学習</span>
-            <span class="tag">計画</span>
-          </div>
-          <span class="rating">★ 4.6</span>
-          <div class="card-actions">
-            <a class="button primary" href="#">アプリを開く</a>
-            <button class="button secondary" type="button" disabled>詳細</button>
-          </div>
-        </article>
-
-        <article class="app-card" data-search="Study Timer 学習 生産性 集中時間を可視化して学習をサポートするタイマー">
-          <div class="app-card-top">
-            <div class="app-icon icon-timer" aria-hidden="true">ST</div>
-            <div>
-              <h3>Study Timer</h3>
-              <p>集中時間を可視化して学習をサポートするタイマー</p>
-            </div>
-          </div>
-          <div class="tags">
-            <span class="tag">学習</span>
-            <span class="tag">生産性</span>
-          </div>
-          <span class="rating">★ 4.5</span>
-          <div class="card-actions">
-            <a class="button primary" href="#">アプリを開く</a>
-            <button class="button secondary" type="button" disabled>詳細</button>
-          </div>
-        </article>
+      <div class="feature-item">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M13 2 3 14h9l-1 8 10-12h-9z"></path></svg></div>
+        <div><strong>主要機能にすぐアクセス</strong><span>よく使うアプリや更新情報へすばやく移動できます。</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"></rect><path d="M8 20h8"></path><path d="M12 16v4"></path></svg></div>
+        <div><strong>シンプルで見やすいUI</strong><span>迷わず使えるレイアウトに整えています。</span></div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 1 0 0 20 10 10 0 0 0 0-20Z"></path><path d="M2 12h20"></path><path d="M12 2a15 15 0 0 1 0 20"></path><path d="M12 2a15 15 0 0 0 0 20"></path></svg></div>
+        <div><strong>どこでも見やすい</strong><span>PCでもスマホでも読みやすく表示します。</span></div>
       </div>
     </section>
 
-    <section class="section" id="categories">
-      <div class="section-head">
-        <div>
-          <h2>カテゴリ</h2>
-          <p>目的に合わせてアプリを探しやすくまとめています。</p>
-        </div>
-      </div>
-      <div class="category-row">
-        <div class="category-card"><strong>生産性</strong><span>メモ、タスク、整理に役立つアプリ</span></div>
-        <div class="category-card"><strong>学習</strong><span>計画、集中、振り返りを支えるアプリ</span></div>
-        <div class="category-card"><strong>メモ</strong><span>思いついたことを残しやすいアプリ</span></div>
-        <div class="category-card"><strong>計画</strong><span>予定や進め方を整えるアプリ</span></div>
-      </div>
-    </section>
-
-    <section class="section store-columns">
-      <div class="list-panel">
-        <h2>おすすめのアプリ</h2>
-        <ul class="store-list">
-          <li>
-            <div><strong>スケジュールビュー</strong><span>予定を見やすく並べて確認できます。</span></div>
-            <span class="tag">計画</span>
-          </li>
-          <li>
-            <div><strong>アイデアノート</strong><span>考えをすばやく整理できます。</span></div>
-            <span class="tag">メモ</span>
-          </li>
-          <li>
-            <div><strong>タスクデッキ</strong><span>カード形式でタスクを管理できます。</span></div>
-            <span class="tag">生産性</span>
-          </li>
-        </ul>
-      </div>
-
-      <div class="list-panel" id="updates">
-        <h2>最近の更新</h2>
-        <ul class="store-list">
-          <li><div><strong>整理メモ v1.3.0</strong><span>テンプレート機能を追加しました</span></div></li>
-          <li><div><strong>テスナビ v1.2.0</strong><span>進捗グラフに対応しました</span></div></li>
-          <li><div><strong>Study Timer v1.1.0</strong><span>通知音のカスタマイズ機能を追加しました</span></div></li>
-        </ul>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <p>IDS Store<br><a href="../index.html">IDS Hubへ戻る</a></p>
-  </footer>
+    <footer>
+      IDS Store は、すべての作業をもっとシンプルに、もっと便利にします。<br>
+      <a href="../index.html">IDS Hubへ戻る</a>
+    </footer>
+  </div>
 
   <script>
     const menuButton = document.querySelector("#menuButton");
     const mobilePanel = document.querySelector("#mobilePanel");
     const searchInput = document.querySelector("#storeSearch");
-    const appCards = [...document.querySelectorAll(".app-card")];
+    const searchableItems = [
+      ...document.querySelectorAll(".app-card"),
+      ...document.querySelectorAll(".store-list li")
+    ];
 
     menuButton.addEventListener("click", () => {
       const isOpen = mobilePanel.classList.toggle("open");
@@ -746,9 +994,9 @@
 
     searchInput.addEventListener("input", () => {
       const query = searchInput.value.trim().toLowerCase();
-      appCards.forEach((card) => {
-        const text = card.dataset.search.toLowerCase();
-        card.classList.toggle("hidden", query && !text.includes(query));
+      searchableItems.forEach((item) => {
+        const text = (item.dataset.search || item.textContent).toLowerCase();
+        item.classList.toggle("hidden", query && !text.includes(query));
       });
     });
   </script>
