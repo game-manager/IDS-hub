@@ -1,0 +1,756 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IDS Store</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --bg: #ffffff;
+      --soft: #f5f8fc;
+      --ink: #102033;
+      --muted: #66758a;
+      --line: #dde7f2;
+      --brand: #0969da;
+      --brand-dark: #064ea4;
+      --brand-soft: #eaf3ff;
+      --panel: #ffffff;
+      --shadow: 0 10px 28px rgba(17, 39, 70, .08);
+      --radius: 8px;
+      font-family: "Inter", "Noto Sans JP", "Yu Gothic", "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--ink);
+    }
+
+    a { color: inherit; }
+    button, input { font: inherit; }
+    button { cursor: pointer; }
+
+    .store-header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--line);
+      background: rgba(255, 255, 255, .94);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+    }
+
+    .header-inner {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 14px 24px;
+      display: grid;
+      grid-template-columns: auto 1fr minmax(220px, 320px) auto;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand {
+      display: inline-flex;
+      align-items: center;
+      text-decoration: none;
+    }
+
+    .brand img {
+      width: 150px;
+      height: auto;
+      display: block;
+    }
+
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .nav a,
+    .mobile-panel a {
+      min-height: 38px;
+      display: inline-flex;
+      align-items: center;
+      padding: 0 12px;
+      border-radius: var(--radius);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+      text-decoration: none;
+    }
+
+    .nav a:hover,
+    .mobile-panel a:hover {
+      background: var(--brand-soft);
+      color: var(--brand);
+    }
+
+    .search {
+      min-height: 42px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--soft);
+      color: var(--muted);
+    }
+
+    .search input {
+      width: 100%;
+      border: 0;
+      outline: 0;
+      background: transparent;
+      color: var(--ink);
+      font-size: 14px;
+    }
+
+    .menu-button {
+      display: none;
+      width: 42px;
+      height: 42px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      color: var(--ink);
+      place-items: center;
+    }
+
+    .mobile-panel {
+      display: none;
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 0 24px 16px;
+      grid-template-columns: 1fr;
+      gap: 8px;
+    }
+
+    .mobile-panel.open { display: grid; }
+
+    .mobile-panel a {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      justify-content: flex-start;
+      min-height: 44px;
+    }
+
+    .icon {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      stroke-width: 2;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+      flex: 0 0 auto;
+    }
+
+    main {
+      max-width: 1180px;
+      margin: 0 auto;
+      padding: 44px 24px 64px;
+    }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(320px, .95fr);
+      gap: 36px;
+      align-items: center;
+      padding: 42px 0 34px;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 12px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    h1 {
+      margin: 18px 0 16px;
+      max-width: 660px;
+      font-size: clamp(34px, 5vw, 58px);
+      line-height: 1.08;
+      letter-spacing: 0;
+    }
+
+    .hero-copy {
+      max-width: 590px;
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.9;
+    }
+
+    .feature-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 26px;
+    }
+
+    .feature-pills span {
+      display: inline-flex;
+      align-items: center;
+      min-height: 38px;
+      padding: 0 14px;
+      border: 1px solid var(--line);
+      border-radius: 999px;
+      background: var(--panel);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .hero-board {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+      box-shadow: var(--shadow);
+      padding: 18px;
+    }
+
+    .hero-board-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 14px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .hero-board-head strong { font-size: 15px; }
+    .hero-board-head span { color: var(--muted); font-size: 13px; font-weight: 700; }
+
+    .mini-list {
+      display: grid;
+      gap: 12px;
+      padding-top: 14px;
+    }
+
+    .mini-app {
+      display: grid;
+      grid-template-columns: 52px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+    }
+
+    .app-icon {
+      width: 52px;
+      height: 52px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      color: #fff;
+      font-size: 20px;
+      font-weight: 900;
+      box-shadow: inset 0 -10px 18px rgba(0, 0, 0, .12);
+    }
+
+    .icon-memo { background: linear-gradient(135deg, #0969da, #55a7ff); }
+    .icon-tesnavi { background: linear-gradient(135deg, #0f7b73, #44c7b8); }
+    .icon-timer { background: linear-gradient(135deg, #6254d9, #8fa0ff); }
+    .icon-task { background: linear-gradient(135deg, #d97706, #ffc35a); }
+
+    .mini-app h3 {
+      margin: 0 0 4px;
+      font-size: 15px;
+    }
+
+    .mini-app p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .rating {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      color: #995c00;
+      font-size: 13px;
+      font-weight: 800;
+      white-space: nowrap;
+    }
+
+    .section {
+      padding: 34px 0;
+      scroll-margin-top: 90px;
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: 18px;
+      margin-bottom: 18px;
+    }
+
+    .section-head h2 {
+      margin: 0 0 8px;
+      font-size: 26px;
+      letter-spacing: 0;
+    }
+
+    .section-head p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.8;
+    }
+
+    .app-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 18px;
+    }
+
+    .app-card {
+      display: grid;
+      gap: 16px;
+      padding: 18px;
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: 0 8px 22px rgba(17, 39, 70, .05);
+    }
+
+    .app-card-top {
+      display: flex;
+      gap: 13px;
+      align-items: flex-start;
+    }
+
+    .app-card h3 {
+      margin: 2px 0 6px;
+      font-size: 19px;
+    }
+
+    .app-card p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14px;
+    }
+
+    .tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      min-height: 28px;
+      padding: 0 10px;
+      border-radius: 999px;
+      background: var(--brand-soft);
+      color: var(--brand);
+      font-size: 12px;
+      font-weight: 800;
+    }
+
+    .card-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .button {
+      min-height: 40px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 7px;
+      padding: 0 14px;
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 800;
+    }
+
+    .button.primary {
+      background: var(--brand);
+      color: #fff;
+      box-shadow: 0 8px 18px rgba(9, 105, 218, .18);
+    }
+
+    .button.primary:hover { background: var(--brand-dark); }
+
+    .button.secondary {
+      background: var(--panel);
+      border-color: var(--line);
+      color: var(--ink);
+    }
+
+    .button.secondary:disabled {
+      color: var(--muted);
+      background: var(--soft);
+      cursor: not-allowed;
+    }
+
+    .store-columns {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 18px;
+      align-items: start;
+    }
+
+    .list-panel {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--panel);
+      overflow: hidden;
+    }
+
+    .list-panel h2 {
+      margin: 0;
+      padding: 18px 18px 12px;
+      font-size: 22px;
+    }
+
+    .store-list {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .store-list li {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      min-height: 66px;
+      padding: 14px 18px;
+      border-top: 1px solid var(--line);
+    }
+
+    .store-list strong {
+      display: block;
+      margin-bottom: 3px;
+    }
+
+    .store-list span {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .category-row {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+    }
+
+    .category-card {
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      background: var(--soft);
+      padding: 16px;
+    }
+
+    .category-card strong {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    .category-card span {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .hidden { display: none !important; }
+
+    footer {
+      border-top: 1px solid var(--line);
+      padding: 24px;
+      text-align: center;
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.8;
+    }
+
+    footer a {
+      color: var(--brand);
+      font-weight: 800;
+      text-decoration: none;
+    }
+
+    @media (max-width: 960px) {
+      .header-inner {
+        grid-template-columns: auto 1fr auto;
+        gap: 14px;
+      }
+
+      .nav { display: none; }
+      .menu-button { display: grid; }
+      .search { grid-column: 1 / -1; }
+      .hero { grid-template-columns: 1fr; padding-top: 26px; }
+      .app-grid { grid-template-columns: 1fr; }
+      .store-columns { grid-template-columns: 1fr; }
+      .category-row { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+
+    @media (max-width: 620px) {
+      .header-inner { padding: 12px 16px; }
+      .brand img { width: 132px; }
+      main { padding: 28px 16px 46px; }
+      h1 { font-size: 34px; }
+      .section { padding: 26px 0; }
+      .section-head { align-items: stretch; flex-direction: column; }
+      .hero-board { padding: 12px; }
+      .mini-app { grid-template-columns: 46px 1fr; }
+      .mini-app .rating { grid-column: 2; }
+      .app-card-top { align-items: center; }
+      .card-actions .button { flex: 1 1 150px; }
+      .category-row { grid-template-columns: 1fr; }
+      .store-list li { align-items: flex-start; flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+  <header class="store-header">
+    <div class="header-inner">
+      <a class="brand" href="./" aria-label="IDS Store ホーム">
+        <img src="../assets/ids-store-logo.svg" alt="IDS Store">
+      </a>
+
+      <nav class="nav" aria-label="メインナビゲーション">
+        <a href="../index.html">ホーム</a>
+        <a href="#featured">アプリ一覧</a>
+        <a href="#categories">カテゴリ</a>
+        <a href="#updates">お知らせ</a>
+      </nav>
+
+      <label class="search" aria-label="アプリ検索">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"></circle><path d="m21 21-4.3-4.3"></path></svg>
+        <input id="storeSearch" type="search" placeholder="アプリを検索" autocomplete="off">
+      </label>
+
+      <button class="menu-button" type="button" id="menuButton" aria-label="メニューを開く" aria-expanded="false">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 6h16"></path><path d="M4 12h16"></path><path d="M4 18h16"></path></svg>
+      </button>
+    </div>
+
+    <nav class="mobile-panel" id="mobilePanel" aria-label="スマホナビゲーション">
+      <a href="../index.html">ホーム</a>
+      <a href="#featured">アプリ一覧</a>
+      <a href="#categories">カテゴリ</a>
+      <a href="#updates">お知らせ</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div>
+        <span class="eyebrow">IDS Store</span>
+        <h1>すぐ使えるアプリを、すぐ開く</h1>
+        <p class="hero-copy">IDSが作成した便利なアプリを、見やすくまとめて公開しています。</p>
+        <div class="feature-pills" aria-label="IDS Storeの特徴">
+          <span>探しやすい</span>
+          <span>見やすい</span>
+          <span>すぐ開ける</span>
+        </div>
+      </div>
+
+      <aside class="hero-board" aria-label="注目アプリの概要">
+        <div class="hero-board-head">
+          <strong>注目のアプリ</strong>
+          <span>評価順</span>
+        </div>
+        <div class="mini-list">
+          <article class="mini-app">
+            <div class="app-icon icon-memo" aria-hidden="true">整</div>
+            <div>
+              <h3>整理メモ</h3>
+              <p>シンプルで使いやすいメモアプリ</p>
+            </div>
+            <span class="rating">★ 4.7</span>
+          </article>
+          <article class="mini-app">
+            <div class="app-icon icon-tesnavi" aria-hidden="true">テ</div>
+            <div>
+              <h3>テスナビ</h3>
+              <p>テスト計画を作りやすくする学習アプリ</p>
+            </div>
+            <span class="rating">★ 4.6</span>
+          </article>
+          <article class="mini-app">
+            <div class="app-icon icon-timer" aria-hidden="true">ST</div>
+            <div>
+              <h3>Study Timer</h3>
+              <p>集中時間を可視化して学習をサポートするタイマー</p>
+            </div>
+            <span class="rating">★ 4.5</span>
+          </article>
+        </div>
+      </aside>
+    </section>
+
+    <section class="section" id="featured">
+      <div class="section-head">
+        <div>
+          <h2>注目のアプリ</h2>
+          <p>よく使うアプリをカードで見やすく整理しています。</p>
+        </div>
+      </div>
+
+      <div class="app-grid" id="appGrid">
+        <article class="app-card" data-search="整理メモ 生産性 メモ シンプルで使いやすいメモアプリ">
+          <div class="app-card-top">
+            <div class="app-icon icon-memo" aria-hidden="true">整</div>
+            <div>
+              <h3>整理メモ</h3>
+              <p>シンプルで使いやすいメモアプリ</p>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">生産性</span>
+            <span class="tag">メモ</span>
+          </div>
+          <span class="rating">★ 4.7</span>
+          <div class="card-actions">
+            <a class="button primary" href="#">アプリを開く</a>
+            <button class="button secondary" type="button" disabled>詳細</button>
+          </div>
+        </article>
+
+        <article class="app-card" data-search="テスナビ 学習 計画 テスト計画を作りやすくする学習アプリ">
+          <div class="app-card-top">
+            <div class="app-icon icon-tesnavi" aria-hidden="true">テ</div>
+            <div>
+              <h3>テスナビ</h3>
+              <p>テスト計画を作りやすくする学習アプリ</p>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">学習</span>
+            <span class="tag">計画</span>
+          </div>
+          <span class="rating">★ 4.6</span>
+          <div class="card-actions">
+            <a class="button primary" href="#">アプリを開く</a>
+            <button class="button secondary" type="button" disabled>詳細</button>
+          </div>
+        </article>
+
+        <article class="app-card" data-search="Study Timer 学習 生産性 集中時間を可視化して学習をサポートするタイマー">
+          <div class="app-card-top">
+            <div class="app-icon icon-timer" aria-hidden="true">ST</div>
+            <div>
+              <h3>Study Timer</h3>
+              <p>集中時間を可視化して学習をサポートするタイマー</p>
+            </div>
+          </div>
+          <div class="tags">
+            <span class="tag">学習</span>
+            <span class="tag">生産性</span>
+          </div>
+          <span class="rating">★ 4.5</span>
+          <div class="card-actions">
+            <a class="button primary" href="#">アプリを開く</a>
+            <button class="button secondary" type="button" disabled>詳細</button>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="categories">
+      <div class="section-head">
+        <div>
+          <h2>カテゴリ</h2>
+          <p>目的に合わせてアプリを探しやすくまとめています。</p>
+        </div>
+      </div>
+      <div class="category-row">
+        <div class="category-card"><strong>生産性</strong><span>メモ、タスク、整理に役立つアプリ</span></div>
+        <div class="category-card"><strong>学習</strong><span>計画、集中、振り返りを支えるアプリ</span></div>
+        <div class="category-card"><strong>メモ</strong><span>思いついたことを残しやすいアプリ</span></div>
+        <div class="category-card"><strong>計画</strong><span>予定や進め方を整えるアプリ</span></div>
+      </div>
+    </section>
+
+    <section class="section store-columns">
+      <div class="list-panel">
+        <h2>おすすめのアプリ</h2>
+        <ul class="store-list">
+          <li>
+            <div><strong>スケジュールビュー</strong><span>予定を見やすく並べて確認できます。</span></div>
+            <span class="tag">計画</span>
+          </li>
+          <li>
+            <div><strong>アイデアノート</strong><span>考えをすばやく整理できます。</span></div>
+            <span class="tag">メモ</span>
+          </li>
+          <li>
+            <div><strong>タスクデッキ</strong><span>カード形式でタスクを管理できます。</span></div>
+            <span class="tag">生産性</span>
+          </li>
+        </ul>
+      </div>
+
+      <div class="list-panel" id="updates">
+        <h2>最近の更新</h2>
+        <ul class="store-list">
+          <li><div><strong>整理メモ v1.3.0</strong><span>テンプレート機能を追加しました</span></div></li>
+          <li><div><strong>テスナビ v1.2.0</strong><span>進捗グラフに対応しました</span></div></li>
+          <li><div><strong>Study Timer v1.1.0</strong><span>通知音のカスタマイズ機能を追加しました</span></div></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>IDS Store<br><a href="../index.html">IDS Hubへ戻る</a></p>
+  </footer>
+
+  <script>
+    const menuButton = document.querySelector("#menuButton");
+    const mobilePanel = document.querySelector("#mobilePanel");
+    const searchInput = document.querySelector("#storeSearch");
+    const appCards = [...document.querySelectorAll(".app-card")];
+
+    menuButton.addEventListener("click", () => {
+      const isOpen = mobilePanel.classList.toggle("open");
+      menuButton.setAttribute("aria-expanded", String(isOpen));
+    });
+
+    mobilePanel.querySelectorAll("a").forEach((link) => {
+      link.addEventListener("click", () => {
+        mobilePanel.classList.remove("open");
+        menuButton.setAttribute("aria-expanded", "false");
+      });
+    });
+
+    searchInput.addEventListener("input", () => {
+      const query = searchInput.value.trim().toLowerCase();
+      appCards.forEach((card) => {
+        const text = card.dataset.search.toLowerCase();
+        card.classList.toggle("hidden", query && !text.includes(query));
+      });
+    });
+  </script>
+</body>
+</html>
